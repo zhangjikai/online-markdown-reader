@@ -5,5 +5,6 @@ Markdown 文件在线阅读， 使用 [marked](https://github.com/chjj/marked) �
 - [x] 文件拖拽
 - [x] `highlight.js` 代码高亮
 - [x] `MathJax` 公式
+- [x] Task list - `- [ ]` `- [x]`
 - [ ] 图片上传显示
 - [ ] html 代码下载

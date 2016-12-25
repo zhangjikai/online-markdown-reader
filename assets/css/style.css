@@ -35,3 +35,14 @@
     line-height: 2em;
     font-family: "Microsoft YaHei", "Tahoma", arial;
 }
+
+.task-list-item-checkbox {
+    margin: 0 0.2em 0.25em -1.6em;
+    vertical-align: middle;
+}
+
+[type="checkbox"], [type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
