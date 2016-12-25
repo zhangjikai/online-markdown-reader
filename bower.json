@@ -1,0 +1,20 @@
+{
+  "name": "online-markdown-reader",
+  "homepage": "https://github.com/zhangjikai/online-markdown-reader",
+  "authors": [
+    "zhangjikai <zhangjk1993@gmail.com>"
+  ],
+  "description": "Markdown 文件在线阅读器",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "marked": "^0.3.6"
+  }
+}

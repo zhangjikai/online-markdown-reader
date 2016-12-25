@@ -1,0 +1,15 @@
+{
+  "name": "online-markdown-reader",
+  "version": "1.0.0",
+  "description": "Markdown 文件在线阅读器",
+  "main": "index.js",
+  "devDependencies": {
+    "browser-sync": "^2.17.3",
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhangjikai <zhangjk1993@gmail.com>",
+  "license": ""
+}
