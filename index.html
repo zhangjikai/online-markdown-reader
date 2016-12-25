@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Markdown Reader</title>
     <link rel="stylesheet" href="assets/lib/highlightjs/styles/atom-one-light.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -18,10 +19,12 @@
 
 </div>
 <div id="content"></div>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+</script>
 
-
-<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>

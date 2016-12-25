@@ -50,6 +50,7 @@ function selectChange(e) {
     reader.readAsText(this.files[0]);
     reader.onload = function (e) {
         document.getElementById("content").innerHTML = marked(e.target.result);
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,"content"]);
     }
 }
 selectFile.addEventListener("dragenter", dragEnter, false);
