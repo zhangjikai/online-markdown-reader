@@ -2,10 +2,17 @@
  * Created by ZhangJikai on 2016/12/25.
  */
 
+//hljs.initHighlightingOnLoad();
+//hljs.initLineNumbersOnLoad();
 var selectFile = document.getElementById('select-file');
 var drop = document.getElementById("drop");
 
-
+marked.setOptions({
+    highlight: function (code) {
+        var value = hljs.highlightAuto(code).value;
+        return value;
+    }
+});
 
 function dragEnter(e) {
     e.stopPropagation();
@@ -28,10 +35,7 @@ function fileSelect(e) {
     var reader = new FileReader();
     reader.readAsText(e.dataTransfer.files[0]);
     reader.onload = function (e) {
-
-
         document.getElementById("content").innerHTML = marked(e.target.result);
-
     }
 
 }
@@ -42,12 +46,9 @@ function selectChange(e) {
 
     drop.style.borderColor = "#ddd";
     var reader = new FileReader();
-    reader.readAsDataURL(this.files[0]);
+    reader.readAsText(this.files[0]);
     reader.onload = function (e) {
-        var image = new Image();
-        image.src = e.target.result;
-        transfer(image);
-
+        document.getElementById("content").innerHTML = marked(e.target.result);
     }
 }
 selectFile.addEventListener("dragenter", dragEnter, false);

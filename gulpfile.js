@@ -5,6 +5,9 @@ var browserSync = require('browser-sync');
 gulp.task("move", function () {
     return gulp.src(
         ['./bower_components/marked/**/*marked*js',
+        './bower_components/highlightjs/**/*highlight*js',
+        './bower_components/highlightjs/**/*css'
+
 
 
 

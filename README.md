@@ -1,2 +1,2 @@
 # online-markdown-reader
-在线Markdown 文件阅读器
+Markdown 文件在线阅读， 使用 [marked](https://github.com/chjj/marked) 解析文件。
