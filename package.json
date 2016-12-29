@@ -5,7 +5,11 @@
   "main": "index.js",
   "devDependencies": {
     "browser-sync": "^2.17.3",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.3.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "plumber": "^0.4.8"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

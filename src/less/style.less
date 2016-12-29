@@ -1,0 +1,270 @@
+@nav-bg: #3bafda;
+@nav-text-color: #fff;
+@nav-hover: #444;
+@nav-border: #47c9af;
+@nav-height: 48px;
+@thumb-upload-area-height: 26px;
+@upload-area-height: 200px;
+@mid-upload-area-height: 150px;
+@transition-time: 0.5s;
+/*nav*/
+
+body {
+  font: 14px/1.42857 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fafafa;
+  padding: 0;
+  margin: 0;
+}
+
+nav {
+  height: @nav-height;
+  width: 100%;
+  background: @nav-bg;
+  color: @nav-text-color;
+  position: fixed;
+  top: 0;
+  left: 0;
+  //padding-left: 20px;
+  z-index: 10;
+
+  .first-menu {
+    margin-left: 1em;
+  }
+
+  //border-bottom: 3px solid @nav-border;
+  ul {
+    background: @nav-bg;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: inline;
+    float: left;
+  }
+
+  a {
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+    text-decoration: none;
+    color: @nav-text-color;
+    line-height: @nav-height;
+    height: @nav-height;
+    margin: 0;
+    padding: 0;
+    &:hover {
+      color: @nav-text-color;
+      //background: #fff;
+      //color: #444;
+      //border-top: 3px solid #fff;
+    }
+
+  }
+
+  /*li:hover {
+    background-color: @nav-hover;
+  }*/
+
+  a#openup {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  nav {
+
+    border-bottom: 0;
+    .first-menu {
+      margin-left: 0px;
+    }
+    ul {
+      display: none;
+      height: auto;
+
+    }
+
+    li {
+      width: 100%;
+      float: left;
+      position: relative;
+      &:first-child {
+        border-top: 1px solid #fff;
+      }
+    }
+
+    a {
+      text-align: left;
+      width: 100%;
+      text-indent: 25px;
+      background: @nav-bg;
+
+      &:hover {
+        background: @nav-bg;
+        color: #fff;
+      }
+    }
+
+    a#openup:after {
+      content: "|||";
+      transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg); /* IE 9 */
+      -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+      width: 30px;
+      height: 40px;
+      display: inline-block;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+
+    a#openup {
+      font-size: 16px;
+      display: block;
+      background-color: @nav-bg;
+      width: 100%;
+      height: @nav-height - 2px;
+      position: relative;
+
+    }
+  }
+
+  //nav
+}
+
+// media
+
+.cf:before, .cf:after {
+  content: "";
+  display: table;
+}
+
+.cf:after {
+  clear: both;
+}
+
+.cf {
+  zoom: 1;
+}
+
+/* Upload */
+
+#upload {
+  z-index: 3;
+  margin-top: @nav-height + 10px;
+  position: relative;
+
+  #fold {
+    display: block;
+    position: absolute;
+    right: 0.2em;
+    color: #ccc;
+    top: -2px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .upload-area {
+    width: auto;
+    height: @upload-area-height;
+    margin: 0 2.6em 0 0.4em;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    transition: height @transition-time;
+
+    .select-file {
+      border-width: 0px;
+      width: 100%;
+      height: @upload-area-height;
+      margin: 0;
+      cursor: pointer;
+      transition: height @transition-time;
+    }
+
+    .select-file-style {
+      background: #F5F7FA;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: @upload-area-height;
+      border: 2px dashed #ddd;
+      pointer-events: none;
+      color: #AAB2BD;
+      font-size: 2em;
+      line-height: 2em;
+      font-family: "Microsoft YaHei", "Tahoma", arial;
+      transition: height @transition-time, font-size @transition-time, border-width @transition-time, line-height @transition-time;;
+    }
+  }
+
+  .upload-area-close {
+    height: @thumb-upload-area-height;
+    overflow: hidden;
+
+    .select-file {
+      height: @thumb-upload-area-height;;
+    }
+
+    .select-file-style {
+      height: @thumb-upload-area-height;
+      border: 2px dashed #ddd;
+      font-size: 1em;
+      line-height: 1em;
+    }
+  }
+
+}
+
+@media screen and (max-width: 842px) {
+  #upload {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 842px) {
+  .upload {
+    width: 842px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  #upload {
+    .upload-area {
+      height: @mid-upload-area-height;
+      .select-file {
+        height: @mid-upload-area-height;
+      }
+      .select-file-style {
+        height: @mid-upload-area-height;
+        font-size: 1.2em;
+      }
+    }
+
+    .upload-area-close {
+      height: @thumb-upload-area-height;
+      overflow: hidden;
+
+      .select-file {
+        height: @thumb-upload-area-height;;
+      }
+
+      .select-file-style {
+        height: @thumb-upload-area-height;
+        border: 2px dashed #ddd;
+        font-size: 1em;
+        line-height: 1em;
+      }
+    }
+  }
+
+}
+
+#content {
+  padding: 0 10px;
+}
+
+
