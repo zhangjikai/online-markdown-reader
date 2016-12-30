@@ -11,7 +11,7 @@
 
 body {
   font: 14px/1.42857 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #fafafa;
+  background: #fff;
 }
 
 nav {
@@ -148,93 +148,78 @@ nav {
 
 /* Upload */
 
-@media screen and (max-width: 842px) {
-  #upload {
-    width: 100%;
-
-  }
-}
-
-@media screen and (min-width: 842px) {
-  #upload {
-    width: 842px;
-  }
-}
-
 #upload {
+  width: auto;
   z-index: 3;
   margin-top: @nav-height + 10px;
   position: relative;
   background: #F5F7FA;
   border: 2px dashed #ddd;
-
-  #fold {
-    display: block;
-    position: absolute;
-    right: 0.2em;
-    color: #ccc;
-    top: 0px;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  .upload-area {
-    width: auto;
-    height: @upload-area-height;
-    margin: 0 2.6em 0 0.4em;
-    padding: 0;
-    position: relative;
-    cursor: pointer;
-
-    transition: height @transition-time;
-
-    .select-file {
-      border-width: 0px;
-      width: 100%;
-      height: @upload-area-height;
-      margin: 0;
-      cursor: pointer;
-      transition: height @transition-time;
-    }
-
-    .select-file-style {
-      background: #F5F7FA;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: @upload-area-height;
-      border: 0px;
-      //border: 2px dashed #ddd;
-      pointer-events: none;
-      color: #AAB2BD;
-      font-size: 2em;
-      line-height: 2em;
-      font-family: "Microsoft YaHei", "Tahoma", arial;
-      transition: height @transition-time, font-size @transition-time, border-width @transition-time, line-height @transition-time;;
-    }
-  }
-
-  .upload-area-close {
-    height: @thumb-upload-area-height;
-    overflow: hidden;
-
-    .select-file {
-      height: @thumb-upload-area-height;;
-    }
-
-    .select-file-style {
-      height: @thumb-upload-area-height;
-      //border: 2px dashed #ddd;
-      font-size: 1em;
-      line-height: 1em;
-    }
-  }
-
 }
 
+#fold {
+  display: block;
+  position: absolute;
+  right: 0.2em;
+  color: #ccc;
+  top: 0px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
 
+.upload-area {
+  width: auto;
+  height: @upload-area-height;
+  margin: 0 2.6em 0 0.4em;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+
+  transition: height @transition-time;
+
+  .select-file {
+    border-width: 0px;
+    width: 100%;
+    height: @upload-area-height;
+    margin: 0;
+    cursor: pointer;
+    transition: height @transition-time;
+  }
+
+  .select-file-style {
+    background: #F5F7FA;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: @upload-area-height;
+    border: 0px;
+    //border: 2px dashed #ddd;
+    pointer-events: none;
+    color: #AAB2BD;
+    font-size: 2em;
+    line-height: 2em;
+    font-family: "Microsoft YaHei", "Tahoma", arial;
+    transition: height @transition-time, font-size @transition-time, border-width @transition-time, line-height @transition-time;;
+  }
+}
+
+.upload-area-close {
+  height: @thumb-upload-area-height;
+  overflow: hidden;
+
+  .select-file {
+    height: @thumb-upload-area-height;;
+  }
+
+  .select-file-style {
+    height: @thumb-upload-area-height;
+    //border: 2px dashed #ddd;
+    font-size: 1em;
+    line-height: 1em;
+  }
+}
 
 @media screen and (max-width: 520px) {
   #upload {
@@ -265,7 +250,27 @@ nav {
       }
     }
   }
+}
+
+#img-upload {
+  position: relative;
+  background: #F5F7FA;
+  border: 2px dashed #ddd;
+
+  .upload-area {
+    margin: 0;
+  }
+}
+
+.remodal-custom {
+  padding: 20px;
 
 }
 
-
+.modal-header {
+  margin-bottom: 20px;
+  span {
+    font-size: 1em;
+    line-height: 1.2em;
+  }
+}

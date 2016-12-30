@@ -20,3 +20,5 @@ Markdown 文件在线阅读器， 使用 [marked](https://github.com/chjj/marked
 * [FileSaver.js](https://github.com/eligrey/FileSaver.js/)
 * [Saving a file with pure JS!](http://codepen.io/davidelrizzo/pen/cxsGb)
 * [代码格式化 js-beautify](https://github.com/beautify-web/js-beautify)
+* [for循环中使用回调函数](http://www.oushit.com/technology/2014/12/05/use-closure-solve-asynchronous-%20callback-variable-problem-in-nodejs-loop.html)
+* [弹窗](https://github.com/VodkaBears/Remodal)

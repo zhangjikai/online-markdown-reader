@@ -10,7 +10,7 @@ img {
     max-width: 100%;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 862px) {
     body {
         width: 862px;
         margin: 0 auto;
@@ -87,7 +87,7 @@ a:visited {
 
 ul, ol {
     padding: 0;
-    padding-left: 24px;
+    padding-left: 2em;
     margin: 0;
 }
 
@@ -120,7 +120,7 @@ pre {
     line-height: 1.2em;
     overflow: auto;
     padding: 6px 10px;
-    border-left: 5px solid #6CE26C;
+    /*border-left: 5px solid #6CE26C;*/
 }
 
 pre > code {
@@ -131,11 +131,10 @@ pre > code {
     padding: 0;
     margin: 0;
     overflow: initial;
-    line-height: inherit;
-    font-size: .85em;
+    line-height: 1.3em;
+    font-size: 1em;
     white-space: pre;
     background: 0 0;
-
 }
 
 code {

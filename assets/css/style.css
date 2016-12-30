@@ -1,7 +1,7 @@
 /*nav*/
 body {
   font: 14px/1.42857 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #fafafa;
+  background: #fff;
 }
 nav {
   height: 48px;
@@ -109,24 +109,15 @@ nav a#openup {
   zoom: 1;
 }
 /* Upload */
-@media screen and (max-width: 842px) {
-  #upload {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 842px) {
-  #upload {
-    width: 842px;
-  }
-}
 #upload {
+  width: auto;
   z-index: 3;
   margin-top: 58px;
   position: relative;
   background: #F5F7FA;
   border: 2px dashed #ddd;
 }
-#upload #fold {
+#fold {
   display: block;
   position: absolute;
   right: 0.2em;
@@ -136,7 +127,7 @@ nav a#openup {
   padding: 0;
   cursor: pointer;
 }
-#upload .upload-area {
+.upload-area {
   width: auto;
   height: 200px;
   margin: 0 2.6em 0 0.4em;
@@ -145,7 +136,7 @@ nav a#openup {
   cursor: pointer;
   transition: height 0.5s;
 }
-#upload .upload-area .select-file {
+.upload-area .select-file {
   border-width: 0px;
   width: 100%;
   height: 200px;
@@ -153,7 +144,7 @@ nav a#openup {
   cursor: pointer;
   transition: height 0.5s;
 }
-#upload .upload-area .select-file-style {
+.upload-area .select-file-style {
   background: #F5F7FA;
   position: absolute;
   top: 0;
@@ -168,14 +159,14 @@ nav a#openup {
   font-family: "Microsoft YaHei", "Tahoma", arial;
   transition: height 0.5s, font-size 0.5s, border-width 0.5s, line-height 0.5s;
 }
-#upload .upload-area-close {
+.upload-area-close {
   height: 28px;
   overflow: hidden;
 }
-#upload .upload-area-close .select-file {
+.upload-area-close .select-file {
   height: 28px;
 }
-#upload .upload-area-close .select-file-style {
+.upload-area-close .select-file-style {
   height: 28px;
   font-size: 1em;
   line-height: 1em;
@@ -203,4 +194,22 @@ nav a#openup {
     font-size: 1em;
     line-height: 1em;
   }
+}
+#img-upload {
+  position: relative;
+  background: #F5F7FA;
+  border: 2px dashed #ddd;
+}
+#img-upload .upload-area {
+  margin: 0;
+}
+.remodal-custom {
+  padding: 20px;
+}
+.modal-header {
+  margin-bottom: 20px;
+}
+.modal-header span {
+  font-size: 1em;
+  line-height: 1.2em;
 }

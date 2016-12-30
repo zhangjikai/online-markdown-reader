@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Markdown Reader</title>
-    <link rel="stylesheet" href="assets/lib/highlightjs/styles/atom-one-light.css">
+    <link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">
     <link rel="stylesheet" href="assets/lib/font-awesome/css/font-awesome.min.css">
+    <link href="//cdn.bootcss.com/remodal/1.1.0/remodal.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/remodal/1.1.0/remodal-default-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/markdown.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
-
 </head>
 <body>
-
 
 <nav class="cf">
     <a href="#" id="openup">菜单</a>
     <ul class="cf">
         <li><a href="javascript:void(0);" class="first-menu" id="export">导出</a></li>
-        <li><a href="#">设置</a></li>
+        <li><a href="#modal" class="popup-modal" id="setting">图片</a></li>
 
     </ul>
 </nav>
@@ -31,19 +31,30 @@
         <input type="file" id="select-file" class="select-file">
         <button class="select-file-style" id="drop">选择或者拖拽 Markdown 文件到此</button>
     </div>
-
-
 </div>
 
-
 <div id="content"></div>
+
+<div class="remodal remodal-custom" data-remodal-id="modal">
+    <div class="modal-header">
+        <span>图片上传完后会将对应图片的路径替换为图片内容</span>
+    </div>
+    <div id="img-upload">
+
+        <div class="upload-area" >
+            <input type="file" accept="image/*" multiple class="select-file" id="img-select">
+            <button class="select-file-style" >选择或者拖拽图片文件到此</button>
+        </div>
+    </div>
+    <br>
+    <button data-remodal-action="cancel" class="remodal-cancel">关闭</button>
+</div>
+
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 </script>
-<script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
-
-
+<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>
@@ -51,6 +62,9 @@
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-css.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-html.js"></script>
+<script src="//cdn.bootcss.com/remodal/1.1.0/remodal.min.js"></script>
+
+
 <script type="text/javascript" src="src/js/nav.js"></script>
 <script type="text/javascript" src="src/js/index.js"></script>
 </body>
