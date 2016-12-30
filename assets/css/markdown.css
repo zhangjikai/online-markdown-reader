@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, dl {
 p {
     margin-top: 8px;
     margin-bottom: 3px;
-    padding-left: 7px;
+    /*padding-left: 7px;*/
 }
 
 h1 {

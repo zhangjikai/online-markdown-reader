@@ -6,6 +6,7 @@
     var fileSelect = document.getElementById('select-file');
     var imgSelect = document.getElementById('img-select');
     var cacheImages = {};
+    var targetFile;
     var filename = "";
 
     var renderer = new marked.Renderer();
@@ -21,7 +22,6 @@
     };
 
 
-
     var toc = []; // your table of contents as a list.
 
     renderer.heading = function (text, level) {
@@ -35,8 +35,8 @@
     };
 
     /*renderer.code = function(code, language) {
-        return "<pre><code class='"+ language+"'>" + code +"</code></pre>"
-    };*/
+     return "<pre><code class='"+ language+"'>" + code +"</code></pre>"
+     };*/
 
     marked.setOptions({
         renderer: renderer,
@@ -66,7 +66,7 @@
         $("#upload").css("border-color", "#ddd");
     }
 
-    function fileDrop(e) {
+    function readDropFile(e) {
 
         e.stopPropagation();
         e.preventDefault();
@@ -79,15 +79,15 @@
         //filename = delExtension(e.originalEvent.dataTransfer.files[0].name);
 
         reader.readAsText(e.dataTransfer.files[0]);
-        var obj = e.dataTransfer.files[0];
-        console.log("file", JSON.stringify(obj));
+        targetFile = e.dataTransfer.files[0];
+
 
         filename = delExtension(e.dataTransfer.files[0].name);
 
         reader.onload = function (e) {
             saveFile(e.target.result);
             document.getElementById("content").innerHTML = marked(e.target.result);
-            $('pre code').each(function(i, block) {
+            $('pre code').each(function (i, block) {
                 hljs.highlightBlock(block);
             });
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
@@ -95,7 +95,7 @@
         }
     }
 
-    function fileSelect(e) {
+    function readSelectFile(e) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -106,6 +106,9 @@
         reader.readAsText(this.files[0]);
         reader.onload = function (e) {
             document.getElementById("content").innerHTML = marked(e.target.result);
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
             collapseUpload();
         }
@@ -140,20 +143,20 @@
         console.log(length);
         var i, index = 0;
 
-        for(i = 0; i < files.length; i++) {
+        for (i = 0; i < files.length; i++) {
             var file = files[i];
             var reader = new FileReader();
             var fileName = file.name;
             reader.readAsDataURL(file);
-            (function(reader, file) {
+            (function (reader, file) {
                 reader.onload = function (e) {
 
-                    if(!cacheImages.hasOwnProperty(file.name) ) {
+                    if (!cacheImages.hasOwnProperty(file.name)) {
                         //console.log(222);
                         cacheImages[file.name] = e.target.result;
                     }
                     index++;
-                    if(index == length) {
+                    if (index == length) {
                         replaceImage();
                     }
                 }
@@ -165,15 +168,14 @@
     function replaceImage() {
         var images = $("img");
         var i;
-        for(i = 0; i < images.length; i++) {
+        for (i = 0; i < images.length; i++) {
             var imgSrc = images[i].src;
             var imgName = getImgName(imgSrc);
-            if(cacheImages.hasOwnProperty(imgName)) {
+            if (cacheImages.hasOwnProperty(imgName)) {
                 images[i].src = cacheImages[imgName];
             }
         }
     }
-
 
 
     function click() {
@@ -199,7 +201,7 @@
         }
 
         document.getElementById("content").innerHTML = marked(file);
-        $('pre code').each(function(i, block) {
+        $('pre code').each(function (i, block) {
             hljs.highlightBlock(block);
         });
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
@@ -219,13 +221,13 @@
     }
 
     function getImgName(path) {
-        return path.substr( path.lastIndexOf('/') + 1) ;
+        return path.substr(path.lastIndexOf('/') + 1);
     }
 
     fileSelect.addEventListener("dragenter", dragEnter, false);
     fileSelect.addEventListener("dragleave", dragLeave, false);
-    fileSelect.addEventListener('drop', fileDrop, false);
-    fileSelect.addEventListener("change", fileSelect, false);
+    fileSelect.addEventListener('drop', readDropFile, false);
+    fileSelect.addEventListener("change", readSelectFile, false);
 
     imgSelect.addEventListener("dragenter", imgDragEnter, false);
     imgSelect.addEventListener("dragleave", imgDragLeave, false);
@@ -266,7 +268,7 @@
             '<body>' +
             $("#content").html() +
             '<script type="text/x-mathjax-config">' +
-            "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});" +
+            "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
             "</script>" +
             '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>' +
             '</body>' +
@@ -277,17 +279,24 @@
         saveAs(blob, name);
     });
 
-    $("#setting").click(function() {
+    $("#refresh").click(function () {
+        if (targetFile == null) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.readAsText(targetFile);
+        filename = delExtension(targetFile.name);
 
+        reader.onload = function (e) {
+            document.getElementById("content").innerHTML = marked(e.target.result);
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
+        }
     });
 
     loadCacheFile();
-    /*$('#setting').magnificPopup({
-        type: 'modal'
-
-    });*/
-
-
 
 
 }());
