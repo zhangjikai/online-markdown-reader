@@ -3,7 +3,7 @@
 @nav-hover: #444;
 @nav-border: #47c9af;
 @nav-height: 48px;
-@thumb-upload-area-height: 26px;
+@thumb-upload-area-height: 28px;
 @upload-area-height: 200px;
 @mid-upload-area-height: 150px;
 @transition-time: 0.5s;
@@ -12,8 +12,6 @@
 body {
   font: 14px/1.42857 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: #fafafa;
-  padding: 0;
-  margin: 0;
 }
 
 nav {
@@ -97,7 +95,7 @@ nav {
     a {
       text-align: left;
       width: 100%;
-      text-indent: 25px;
+      text-indent: 20px;
       background: @nav-bg;
 
       &:hover {
@@ -116,7 +114,7 @@ nav {
       display: inline-block;
       position: absolute;
       right: 20px;
-      top: 20px;
+      top: 15px;
     }
 
     a#openup {
@@ -150,17 +148,32 @@ nav {
 
 /* Upload */
 
+@media screen and (max-width: 842px) {
+  #upload {
+    width: 100%;
+
+  }
+}
+
+@media screen and (min-width: 842px) {
+  #upload {
+    width: 842px;
+  }
+}
+
 #upload {
   z-index: 3;
   margin-top: @nav-height + 10px;
   position: relative;
+  background: #F5F7FA;
+  border: 2px dashed #ddd;
 
   #fold {
     display: block;
     position: absolute;
     right: 0.2em;
     color: #ccc;
-    top: -2px;
+    top: 0px;
     margin: 0;
     padding: 0;
     cursor: pointer;
@@ -173,6 +186,7 @@ nav {
     padding: 0;
     position: relative;
     cursor: pointer;
+
     transition: height @transition-time;
 
     .select-file {
@@ -191,7 +205,8 @@ nav {
       left: 0;
       width: 100%;
       height: @upload-area-height;
-      border: 2px dashed #ddd;
+      border: 0px;
+      //border: 2px dashed #ddd;
       pointer-events: none;
       color: #AAB2BD;
       font-size: 2em;
@@ -211,7 +226,7 @@ nav {
 
     .select-file-style {
       height: @thumb-upload-area-height;
-      border: 2px dashed #ddd;
+      //border: 2px dashed #ddd;
       font-size: 1em;
       line-height: 1em;
     }
@@ -219,17 +234,7 @@ nav {
 
 }
 
-@media screen and (max-width: 842px) {
-  #upload {
-    width: 100%;
-  }
-}
 
-@media screen and (min-width: 842px) {
-  .upload {
-    width: 842px;
-  }
-}
 
 @media screen and (max-width: 520px) {
   #upload {
@@ -254,17 +259,13 @@ nav {
 
       .select-file-style {
         height: @thumb-upload-area-height;
-        border: 2px dashed #ddd;
+        //border: 2px dashed #ddd;
         font-size: 1em;
         line-height: 1em;
       }
     }
   }
 
-}
-
-#content {
-  padding: 0 10px;
 }
 
 

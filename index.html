@@ -17,14 +17,13 @@
 <nav class="cf">
     <a href="#" id="openup">菜单</a>
     <ul class="cf">
-        <li><a href="#" class="first-menu">设置</a></li>
-        <li><a href="#">导出</a></li>
+        <li><a href="javascript:void(0);" class="first-menu" id="export">导出</a></li>
+        <li><a href="#" >设置</a></li>
+
     </ul>
 </nav>
 
 <div id="upload" >
-
-    <!--<i class="fa fa-plus-square  fa-2x" aria-hidden="true" id="fold"></i>-->
 
     <i class="fa fa-minus-square  fa-2x" aria-hidden="true" id="fold" expand="true"></i>
     <div class="upload-area" id="upload-area">
@@ -32,9 +31,7 @@
         <button class="select-file-style" id="drop">选择或者拖拽 Markdown 文件到此</button>
     </div>
 
-    <!--<div class="upload-area-close" id="upload-area-close">
 
-    </div>-->
 
 </div>
 
@@ -44,13 +41,13 @@
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 </script>
-<script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
-</script>
+<script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
 
 
 <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>
+<script type="text/javascript" src="assets/lib/FileSaver.js/FileSaver.min.js"></script>
 <script type="text/javascript" src="src/js/nav.js"></script>
 <script type="text/javascript" src="src/js/index.js"></script>
 </body>

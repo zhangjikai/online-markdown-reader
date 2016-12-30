@@ -4,7 +4,7 @@
 
 (function () {
     var selectFile = document.getElementById('select-file');
-    var drop = document.getElementById("drop");
+    var drop = document.getElementById("upload");
 
     var renderer = new marked.Renderer();
     renderer.listitem = function (text) {
@@ -86,16 +86,17 @@
     }
 
 
+    //function exportHtml() {
+    //    console.log(222);
+    //}
+
+
     function selectChange(e) {
         e.stopPropagation();
         e.preventDefault();
-        //console.log(222);
-
-        //drop.style.borderColor = "#ddd";
         if (this.files == null || this.files[0] == null) {
             return;
         }
-        //console.log(333);
         var reader = new FileReader();
         reader.readAsText(this.files[0]);
         reader.onload = function (e) {
@@ -135,5 +136,30 @@
         }
     });
 
+    $("#export").click(function () {
+        /*console.log("export");*/
+        var htmlContent = '<!DOCTYPE html>' +
+            '<html>' +
+            '<head>' +
+            '<meta charset="UTF-8">' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+            '<title>markdown</title>' +
+            '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">' +
+            '<link rel="stylesheet" href="http://markdown.zhangjikai.com/assets/css/markdown.css">' +
+            '</head>' +
+            '<body>' +
+            $("#content").html() +
+            '<script type="text/x-mathjax-config">' +
+            "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});" +
+            "</script>" +
+            '<script type="text/javascript" async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>' +
+            '</body>' +
+            '</html>';
+
+
+        var filename = "markdown.html";
+        var blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+        saveAs(blob, filename);
+    })
 
 }());

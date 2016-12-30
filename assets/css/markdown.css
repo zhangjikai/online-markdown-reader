@@ -35,6 +35,7 @@ h1, h2, h3, h4, h5, dl {
 p {
     margin-top: 8px;
     margin-bottom: 3px;
+    padding-left: 7px;
 }
 
 h1 {
@@ -86,7 +87,7 @@ a:visited {
 
 ul, ol {
     padding: 0;
-    padding-left: 18px;
+    padding-left: 24px;
     margin: 0;
 }
 
@@ -237,7 +238,7 @@ table td:first-child, table th:first-child {
 
 
 .task-list-item-checkbox {
-    margin: 0 0.2em 0.25em -1.3em;
+    margin: 0 0.2em 0.25em -1.4em;
     vertical-align: middle;
 }
 
