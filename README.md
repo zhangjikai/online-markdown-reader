@@ -19,3 +19,4 @@ Markdown 文件在线阅读器， 使用 [marked](https://github.com/chjj/marked
 * [Using HTML5/Javascript to generate and save a file](http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file)
 * [FileSaver.js](https://github.com/eligrey/FileSaver.js/)
 * [Saving a file with pure JS!](http://codepen.io/davidelrizzo/pen/cxsGb)
+* [代码格式化 js-beautify](https://github.com/beautify-web/js-beautify)

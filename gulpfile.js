@@ -13,7 +13,8 @@ gulp.task("move", function () {
             './bower_components/jquery/dist/**/*js',
             './bower_components/font-awesome/css/**/*css',
             './bower_components/font-awesome/fonts/*',
-            './bower_components/FileSaver.js/**/*FileSaver*js'
+            './bower_components/FileSaver.js/**/*FileSaver*js',
+            './bower_components/js-beautify/js/lib/*beautify*js',
 
         ],
         {

@@ -19,6 +19,7 @@
     "highlightjs": "^9.8.0",
     "jquery": "^3.1.1",
     "font-awesome": "^4.7.0",
-    "FileSaver.js": "^0.0.2"
+    "FileSaver.js": "^0.0.2",
+    "js-beautify": "^1.6.7"
   }
 }

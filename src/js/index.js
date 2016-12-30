@@ -5,6 +5,7 @@
 (function () {
     var selectFile = document.getElementById('select-file');
     var drop = document.getElementById("upload");
+    var filename = "";
 
     var renderer = new marked.Renderer();
     renderer.listitem = function (text) {
@@ -57,7 +58,7 @@
         drop.style.borderColor = "#ddd";
     }
 
-    function fileSelect(e) {
+    function fileDrop(e) {
 
         e.stopPropagation();
         e.preventDefault();
@@ -65,13 +66,16 @@
         drop.style.borderColor = "#ddd";
         var reader = new FileReader();
         reader.readAsText(e.dataTransfer.files[0]);
+        //console.log(e.dataTransfer.files[0]);
+        filename = delExtension(e.dataTransfer.files[0].name);
+        //filename = delExtension(filename);
+        //console.log(filename)
         reader.onload = function (e) {
+
             document.getElementById("content").innerHTML = marked(e.target.result);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
             collapseUpload();
-
         }
-
     }
 
     function click() {
@@ -91,7 +95,7 @@
     //}
 
 
-    function selectChange(e) {
+    function fileSelect(e) {
         e.stopPropagation();
         e.preventDefault();
         if (this.files == null || this.files[0] == null) {
@@ -106,6 +110,7 @@
         }
     }
 
+
     function collapseUpload() {
         $("#fold").removeClass("fa-minus-square");
         $("#fold").addClass("fa-plus-square");
@@ -113,11 +118,17 @@
         $("#fold").attr("expand", false);
     }
 
+
+    function delExtension(str) {
+        /*var reg = /^(.+)(\.[^ .]+)?$/;
+         return str.replace(reg, '');*/
+        return str.substr(0, str.lastIndexOf('.')) || str;
+    }
+
     selectFile.addEventListener("dragenter", dragEnter, false);
     selectFile.addEventListener("dragleave", dragLeave, false);
-    selectFile.addEventListener('drop', fileSelect, false);
-    selectFile.addEventListener("change", selectChange, false);
-
+    selectFile.addEventListener('drop', fileDrop, false);
+    selectFile.addEventListener("change", fileSelect, false);
 
     $("#fold").click(function () {
 
@@ -157,9 +168,10 @@
             '</html>';
 
 
-        var filename = "markdown.html";
-        var blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
-        saveAs(blob, filename);
+        //console.log(html_beautify(htmlContent, {indent_size: 4}));
+        var name = filename + ".html";
+        var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
+        saveAs(blob, name);
     })
 
 }());
