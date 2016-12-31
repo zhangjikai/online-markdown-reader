@@ -10,6 +10,7 @@
     var filename = "";
 
     var renderer = new marked.Renderer();
+
     renderer.listitem = function (text) {
         if (/^\s*\[[x ]\]\s*/.test(text)) {
             text = text
@@ -23,36 +24,84 @@
 
 
     var toc = []; // your table of contents as a list.
+    var tocLevel = 5;
+    var tocDumpIndex = 0;
+    var tocStr = "";
 
     renderer.heading = function (text, level) {
-        var slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+
+        var slug = text.toLowerCase().replace(/[\s]+/g, '-');
+
+        if(tocStr.indexOf(slug) != -1) {
+            slug += "-" + tocDumpIndex;
+            tocDumpIndex++;
+
+        }
+        tocStr += slug;
         toc.push({
             level: level,
             slug: slug,
             title: text
         });
-        return "<h" + level + " id=\"" + slug + "\"><a href=\"#" + slug + "\" class=\"anchor\"></a>" + text + "</h" + level + ">";
+
+        /*return "<h" + level + " id=\"" + slug + "\"><a href=\"#" + slug + "\" class=\"anchor\">"  + "</a>" + text + "</h" + level + ">";*/
+        return "<h" + level + " id=\"" + slug + "\"><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
+            '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
+            '' + "</a>" + text + "</h" + level + ">";
+
+        /*return "<h" + level + " id=\"" + slug + "\">" + '' +
+         '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
+         '' + "<a href=\"#" + slug + "\" class=\"anchor\"></a>" + text + "</h" + level + ">";*/
+
+        /*return "<h" + level + "><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
+         '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
+         '' + "</a>" + '<span id="' + slug + '">&nbsp;</span>' + text + "</h" + level + ">";*/
     };
 
-    /*renderer.code = function(code, language) {
-     return "<pre><code class='"+ language+"'>" + code +"</code></pre>"
-     };*/
+    var codeFun = renderer.code;
+    renderer.code = function (code, language) {
+        if(language == "latex") {
+            console.log(code);
+            return "<div class='diagram' id='diagram'>" + code+"</div>"
+        } else {
+            return codeFun.call(this, code, language);
+        }
+
+    };
 
     marked.setOptions({
         renderer: renderer,
         gfm: true
-        //highlight: function (code) {
-        //    console.log(code)
-        //    var value = hljs.highlightAuto(code).value;
-        //    return value;
-        //}
+        /*highlight: function (code) {
+            var value = hljs.highlightAuto(code).value;
+            return value;
+        }*/
     });
 
 
+    //refreshAuto();
     function refreshAuto() {
-        var int = self.setInterval(click, 3000)
+        /*var int = self.setInterval(click, 3000)*/
+        setInterval(load, 3000);
     }
 
+
+    function load() {
+        if (targetFile == null) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.readAsText(targetFile);
+        filename = delExtension(targetFile.name);
+
+        reader.onload = function (e) {
+            document.getElementById("content").innerHTML = marked(e.target.result);
+            /*$('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });*/
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
+        }
+    }
     function dragEnter(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -71,27 +120,43 @@
         e.stopPropagation();
         e.preventDefault();
 
-        //drop.style.borderColor = "#ddd";
+
         $("#upload").css("border-color", "#ddd");
-        console.log(e);
+
         var reader = new FileReader();
         //reader.readAsText(e.originalEvent.dataTransfer.files[0]);
         //filename = delExtension(e.originalEvent.dataTransfer.files[0].name);
-
-        reader.readAsText(e.dataTransfer.files[0]);
         targetFile = e.dataTransfer.files[0];
-
-
+        if (!checkMdExt(targetFile.name)) {
+            var ins = $('[data-remodal-id=md-tip]').remodal();
+            ins.open();
+            return;
+        }
+        $("#loader").css("display", "block");
+        reader.readAsText(targetFile);
         filename = delExtension(e.dataTransfer.files[0].name);
 
         reader.onload = function (e) {
-            saveFile(e.target.result);
+
+
+            var mdContent = e.target.result;
+            console.log(mdContent.indexOf("<!-- toc -->"));
+            $("#loader").css("display", "none");
+
+
+            saveFile(filename, e.target.result);
+            toc.length = 0;
             document.getElementById("content").innerHTML = marked(e.target.result);
-            $('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
+            //$('pre code').each(function (i, block) {
+            //    hljs.highlightBlock(block);
+            //});
+
+            $("pre").addClass("line-numbers");
+            Prism.highlightAll();
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
             collapseUpload();
+            genToc();
+            $("#loader").css("display", "none");
         }
     }
 
@@ -113,6 +178,7 @@
             collapseUpload();
         }
     }
+
 
     function imgDragEnter(e) {
         e.stopPropagation();
@@ -140,20 +206,39 @@
         var files = e.dataTransfer.files;
 
         var length = files.length;
-        console.log(length);
+
+
         var i, index = 0;
 
         for (i = 0; i < files.length; i++) {
+            if (!checkImgExt(files[i].name)) {
+                var inst = $('[data-remodal-id=img-tip]').remodal();
+                inst.open();
+                return;
+            }
+        }
+        $("#loader").css("display", "block");
+        for (i = 0; i < files.length; i++) {
             var file = files[i];
             var reader = new FileReader();
-            var fileName = file.name;
             reader.readAsDataURL(file);
             (function (reader, file) {
                 reader.onload = function (e) {
 
                     if (!cacheImages.hasOwnProperty(file.name)) {
                         //console.log(222);
-                        cacheImages[file.name] = e.target.result;
+                        //cacheImages[file.name] = e.target.result;
+                        var image = new Image();
+                        image.src = e.target.result;
+                        var ext = getImgExtension(file.name);
+                        var format = "image/png";
+                        if (ext.toLowerCase() == "jpg" || ext.toLowerCase() == "jpeg") {
+                            format = "image/jpeg";
+                        }
+                        // console.log(format);
+                        cacheImages[file.name] = compressImage(image, format);
+                        /*image.src = compressImage(image, format);
+                         $("#content").prepend(image);*/
                     }
                     index++;
                     if (index == length) {
@@ -173,8 +258,86 @@
             var imgName = getImgName(imgSrc);
             if (cacheImages.hasOwnProperty(imgName)) {
                 images[i].src = cacheImages[imgName];
+
             }
         }
+
+        $("#loader").css("display", "none");
+    }
+
+    function compressImage(img, format) {
+
+        var max_width = 862;
+        var canvas = document.createElement('canvas');
+
+        var width = img.width;
+        var height = img.height;
+        if (format == null || format == "") {
+            format = "image/png";
+        }
+
+        console.log(format);
+        // calculate the width and height, constraining the proportions
+
+        if (width > max_width) {
+            //height *= max_width / width;
+            height = Math.round(height *= max_width / width);
+            width = max_width;
+        }
+
+
+        // resize the canvas and draw the image data into it
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        return canvas.toDataURL(format);
+    }
+
+
+    function genToc() {
+        console.log(toc);
+        var lastLevel = 0;
+        var i, j, singleToc;
+        var tocHtml = "";
+        var ulCount = 0;
+
+
+
+        for (i = 0; i < toc.length; i++) {
+            singleToc = toc[i];
+
+            if(singleToc.level > tocLevel) {
+                continue;
+            }
+            if (lastLevel > singleToc.level) {
+                for (j = lastLevel - singleToc.level; j >= 0; j--) {
+                    tocHtml += "</ul>";
+                    ulCount--;
+                }
+                tocHtml += "<ul>"
+                ulCount++;
+            }
+
+            if (lastLevel < singleToc.level) {
+                for (j = singleToc.level -lastLevel; j > 0; j--) {
+                    tocHtml += "<ul>";
+                    ulCount++;
+                }
+
+            }
+            tocHtml += "<li><a href='#" + singleToc.slug + "'>" + singleToc.title + "</a></li>"
+            lastLevel = singleToc.level;
+        }
+
+        for (i = 0; i < ulCount; i++) {
+            tocHtml += "</ul>"
+        }
+
+        $("#content").prepend(tocHtml);
+
+
     }
 
 
@@ -190,22 +353,44 @@
     }
 
 
-    function saveFile(data) {
+    function saveFile(filename, data) {
+        localStorage.setItem("filename", filename);
         localStorage.setItem("file", data);
     }
 
     function loadCacheFile() {
         var file = localStorage.getItem("file");
+
         if (file == null || file == "") {
             return;
         }
+        filename = localStorage.getItem("filename");
 
+
+
+        var heading =  /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/igm;
+        var match, index = 0;
+       /* console.log(heading.exec(file));*/
+        /*while((match = heading.exec(file)) != null) {
+            console.log(match.index)
+            index++;
+        }*/
+        console.log(index);
+        toc.length = 0;
         document.getElementById("content").innerHTML = marked(file);
-        $('pre code').each(function (i, block) {
-            hljs.highlightBlock(block);
-        });
+
+        $("pre").addClass("line-numbers");
+        Prism.highlightAll();
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
+
+        var options = {theme: 'hand'};
+
+        $(".diagram").sequenceDiagram({theme: 'hand'});
         collapseUpload();
+        //anchors.add();
+
+
+        $("#loader").css("display", "none");
     }
 
     function collapseUpload() {
@@ -223,6 +408,29 @@
     function getImgName(path) {
         return path.substr(path.lastIndexOf('/') + 1);
     }
+
+    function getImgExtension(str) {
+        return str.substr(str.lastIndexOf(".") + 1) || str;
+    }
+
+    function checkMdExt(name) {
+        var re = /(\.md|\.markdown|\.txt|\.mkd|\.text)$/i;
+        if (re.test(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function checkImgExt(name) {
+        var re = /(\.png|\.jpg|\.gif|\.bmp)$/i;
+        if (re.test(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     fileSelect.addEventListener("dragenter", dragEnter, false);
     fileSelect.addEventListener("dragleave", dragLeave, false);
@@ -263,7 +471,7 @@
             '<meta name="viewport" content="width=device-width, initial-scale=1">' +
             '<title>markdown</title>' +
             '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">' +
-            '<link rel="stylesheet" href="http://markdown.zhangjikai.com/assets/css/markdown.css">' +
+            '<link rel="stylesheet" href="http://10.64.0.124:81/assets/css/markdown.css">' +
             '</head>' +
             '<body>' +
             $("#content").html() +
@@ -297,6 +505,8 @@
     });
 
     loadCacheFile();
-
+    genToc();
 
 }());
+
+

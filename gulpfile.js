@@ -15,8 +15,8 @@ gulp.task("move", function () {
             './bower_components/font-awesome/fonts/*',
             './bower_components/FileSaver.js/**/*FileSaver*js',
             './bower_components/js-beautify/js/lib/*beautify*js',
-            './bower_components/sweetalert/dist/*sweetalert*js',
-            './bower_components/sweetalert/dist/*sweetalert*css'
+            './bower_components/loaders.css/*load*css',
+
 
 
         ],

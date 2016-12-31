@@ -265,6 +265,16 @@ nav {
 .remodal-custom {
   padding: 20px;
 
+
+}
+
+.custom-remodal-close {
+  left: auto;
+  right: 0;
+  &:before{
+    left: auto;
+    right: 0;
+  }
 }
 
 .modal-header {
@@ -273,4 +283,47 @@ nav {
     font-size: 1em;
     line-height: 1.2em;
   }
+}
+
+
+@loading-background-opacity: 0.7;
+@loading-background-opacity-IE : @loading-background-opacity * 100;
+@loading-icon-size: 60px;
+
+.loading-background {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  filter: alpha(opacity=@loading-background-opacity-IE); /*IE*/
+  -moz-opacity: @loading-background-opacity; /*old Mozilla*/
+  -khtml-opacity: @loading-background-opacity; /*old Safari*/
+  opacity: @loading-background-opacity; /*Chrome, Opera, Safari*/
+  z-index: 999999;
+
+}
+
+.loading-icon {
+  margin: auto;
+  position: absolute;
+  top: @loading-icon-size;
+  left: @loading-icon-size;
+  bottom: 0;
+  right: 0;
+  height: @loading-icon-size;
+  width: @loading-icon-size;
+}
+
+.square-spin > div {
+  border: 0px;
+}
+
+
+:target:before {
+  content:"";
+  display:block;
+  height:50px; /* fixed header height*/
+  margin:-50px 0 0; /* negative fixed header height */
 }

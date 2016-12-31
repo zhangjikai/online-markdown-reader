@@ -22,3 +22,5 @@ Markdown 文件在线阅读器， 使用 [marked](https://github.com/chjj/marked
 * [代码格式化 js-beautify](https://github.com/beautify-web/js-beautify)
 * [for循环中使用回调函数](http://www.oushit.com/technology/2014/12/05/use-closure-solve-asynchronous-%20callback-variable-problem-in-nodejs-loop.html)
 * [弹窗](https://github.com/VodkaBears/Remodal)
+* html5 压缩图片
+* [HTML position:fixed page header and in-page anchors](http://stackoverflow.com/questions/4086107/html-positionfixed-page-header-and-in-page-anchors)

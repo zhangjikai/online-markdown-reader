@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Markdown Reader</title>
-    <link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">
+    <!--<link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">-->
+
+    <link rel="stylesheet" href="assets/lib/prism/prism.css">
     <link rel="stylesheet" href="assets/lib/font-awesome/css/font-awesome.min.css">
     <link href="//cdn.bootcss.com/remodal/1.1.0/remodal.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/remodal/1.1.0/remodal-default-theme.min.css" rel="stylesheet">
+    <link href="bower_components/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="assets/css/markdown.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/lib/loaders.css/loaders.min.css">
 
 </head>
 <body>
@@ -20,10 +25,28 @@
         <li><a href="javascript:void(0);" class="first-menu" id="export">导出</a></li>
         <li><a href="#modal" class="popup-modal" id="setting">图片</a></li>
         <li><a href="javascript:void(0);" id="refresh">刷新文件</a></li>
-
     </ul>
 </nav>
 
+
+<div class="loading-background" id="loader">
+    <div class="loading-icon">
+        <div class="loader">
+            <div class="ball-scale-multiple">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <!--<div class="loader">
+            <div class="ball-clip-rotate-multiple">
+                <div></div>
+                <div></div>
+            </div>
+        </div>-->
+    </div>
+</div>
 <div id="upload">
 
     <i class="fa fa-minus-square  fa-2x" aria-hidden="true" id="fold" expand="true"></i>
@@ -42,22 +65,41 @@
     </div>
     <div id="img-upload">
 
-        <div class="upload-area" >
+        <div class="upload-area">
             <input type="file" accept="image/*" multiple class="select-file" id="img-select">
-            <button class="select-file-style" >选择或者拖拽图片文件到此</button>
+            <button class="select-file-style">选择或者拖拽图片文件到此</button>
         </div>
     </div>
     <br>
     <button data-remodal-action="cancel" class="remodal-cancel">关闭</button>
 </div>
 
+
+<div class="remodal remodal-custom" data-remodal-id="md-tip">
+    <button data-remodal-action="close" class="remodal-close custom-remodal-close"></button>
+    <div>
+        <span>支持的文件类型：<code>*.md, *.markdown, *.mkd, *.txt, *.text</code></span>
+    </div>
+
+</div>
+
+<div class="remodal remodal-custom" data-remodal-id="img-tip">
+    <button data-remodal-action="close" class="remodal-close custom-remodal-close"></button>
+    <div>
+        <span>支持的文件类型：<code>*.jpg, *.png, *.gif, *.bmp</code></span>
+    </div>
+
+</div>
+
+
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-
 </script>
 <script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
 <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
+<script type="text/javascript" src="assets/lib/prism/prism.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>
 <script type="text/javascript" src="assets/lib/FileSaver.js/FileSaver.min.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify.js"></script>
@@ -65,6 +107,18 @@
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-html.js"></script>
 <script src="//cdn.bootcss.com/remodal/1.1.0/remodal.min.js"></script>
 
+
+
+
+<script type="text/javascript" src="bower_components/bower-webfontloader/webfont.js" ></script>
+<script type="text/javascript"  src="bower_components/snap.svg/dist/snap.svg-min.js" ></script>
+<script type="text/javascript"  src="bower_components/underscore/underscore-min.js" ></script>
+<script type="text/javascript"  src="bower_components/js-sequence-diagrams/dist/sequence-diagram.js" ></script>
+
+<script type="text/javascript">
+    console.log("diagram", Diagram);
+    console.log(3333)
+</script>
 
 <script type="text/javascript" src="src/js/nav.js"></script>
 <script type="text/javascript" src="src/js/index.js"></script>

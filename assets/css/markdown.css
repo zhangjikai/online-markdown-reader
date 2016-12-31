@@ -8,6 +8,8 @@ body {
 
 img {
     max-width: 100%;
+    border: none;
+    padding: 0.7em 0;
 }
 
 @media screen and (min-width: 862px) {
@@ -30,6 +32,43 @@ h1, h2, h3, h4, h5 {
 h1, h2, h3, h4, h5, dl {
     margin-bottom: 16px;
     padding: 0;
+}
+
+ h1 .octicon-link,  h2 .octicon-link,  h3 .octicon-link,  h4 .octicon-link,  h5 .octicon-link,  h6 .octicon-link {
+    color: #000;
+    vertical-align: middle;
+    visibility: hidden;
+}
+
+ h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor, h5:hover .anchor, h6:hover .anchor {
+    text-decoration:none
+}
+ h1:hover .anchor .octicon-link, h2:hover .anchor .octicon-link, h3:hover .anchor .octicon-link, h4:hover .anchor .octicon-link, h5:hover .anchor .octicon-link, h6:hover .anchor .octicon-link {
+    visibility:visible
+}
+
+
+
+
+
+/*a.anchor {
+    display: block;
+    position: relative;
+    top: -250px;
+    visibility: hidden;
+}*/
+
+.octicon {
+    display: inline-block;
+    vertical-align: text-top;
+    fill: currentColor;
+}
+
+.anchor {
+    float: left;
+    padding-right: 4px;
+    margin-left: -20px;
+    line-height: 1;
 }
 
 p {
@@ -69,7 +108,8 @@ h5 {
 }
 
 a {
-    color: #0099ff;
+    /*color: #0099ff;*/
+    color: #4078c0;
     margin: 0 2px;
     padding: 0;
     vertical-align: baseline;
@@ -139,6 +179,25 @@ pre > code {
 
 code {
     color: #666555;
+}
+
+
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+
+    background: #f7f7f7;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+
+    background: #f7f7f7;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background:  #f7f7f7;
 }
 
 aside {
@@ -244,4 +303,8 @@ table td:first-child, table th:first-child {
 [type="checkbox"], [type="radio"] {
     box-sizing: border-box;
     padding: 0;
+}
+
+strong {
+    margin: 3px;
 }
