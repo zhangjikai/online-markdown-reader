@@ -11,6 +11,9 @@
     <link href="//cdn.bootcss.com/remodal/1.1.0/remodal.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/remodal/1.1.0/remodal-default-theme.min.css" rel="stylesheet">
     <link href="bower_components/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/css/basic/emojify.min.css" />
+    <link rel="stylesheet" href="assets/lib/backtotop/backtotop.css">
+    <link rel="stylesheet" href="bower_components/magic-check/css/magic-check.min.css">
 
     <link rel="stylesheet" href="assets/css/markdown.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -23,8 +26,9 @@
     <a href="#" id="openup">菜单</a>
     <ul class="cf">
         <li><a href="javascript:void(0);" class="first-menu" id="export">导出</a></li>
-        <li><a href="#modal" class="popup-modal" id="setting">图片</a></li>
+        <li><a href="#modal" class="popup-modal" id="image">图片</a></li>
         <li><a href="javascript:void(0);" id="refresh">刷新文件</a></li>
+        <li><a href="#setting" class="popup-modal" id="setting">设置</a></li>
     </ul>
 </nav>
 
@@ -56,6 +60,8 @@
         <button class="select-file-style" id="drop">选择或者拖拽 Markdown 文件到此</button>
     </div>
 </div>
+
+
 
 <div id="content"></div>
 
@@ -91,11 +97,85 @@
 
 </div>
 
+<div class="remodal remodal-custom" data-remodal-id="setting">
+    <button data-remodal-action="close" class="remodal-close custom-remodal-close"></button>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>图片</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_img">
+            <label for="s_img">压缩图片</label>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>目录</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_toc">
+            <label for="s_toc">自动生成目录</label>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>代码高亮</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-radio custom-radio" type="radio" name="radio" id="s_highlight">
+            <label for="s_highlight">highlight.js</label>
+            <input class="magic-radio custom-radio" type="radio" name="radio" id="s_prism">
+            <label for="s_prism">prism.js</label>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>缓存</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_cache">
+            <label for="s_cache">缓存上次打开的文件（文件不超过4MB）</label>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>扩展</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_math">
+            <label for="s_math">MathJax</label>
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_seq">
+            <label for="s_seq">Sequence Diagram</label>
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_emoij">
+            <label for="s_emoij">emoij</label>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <div class="setting-title">
+            <span>导出</span>
+        </div>
+        <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_backtop">
+            <label for="s_backtop">添加返回顶部按钮</label>
+        </div>
+    </div>
+
+
+
+</div>
+
+<a href="#" id="linkTop" class="backtotop"></a>
 
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 </script>
-<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
@@ -105,20 +185,15 @@
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-css.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-html.js"></script>
+<script type="text/javascript" src="assets/lib/backtotop/backtotop.js"></script>
 <script src="//cdn.bootcss.com/remodal/1.1.0/remodal.min.js"></script>
 
 
-
-
-<script type="text/javascript" src="bower_components/bower-webfontloader/webfont.js" ></script>
+<!--<script type="text/javascript" src="bower_components/bower-webfontloader/webfont.js" ></script>
 <script type="text/javascript"  src="bower_components/snap.svg/dist/snap.svg-min.js" ></script>
 <script type="text/javascript"  src="bower_components/underscore/underscore-min.js" ></script>
 <script type="text/javascript"  src="bower_components/js-sequence-diagrams/dist/sequence-diagram.js" ></script>
-
-<script type="text/javascript">
-    console.log("diagram", Diagram);
-    console.log(3333)
-</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"></script>-->
 
 <script type="text/javascript" src="src/js/nav.js"></script>
 <script type="text/javascript" src="src/js/index.js"></script>

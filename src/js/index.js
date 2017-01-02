@@ -49,11 +49,11 @@
             '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
             '' + "</a>" + text + "</h" + level + ">";
 
-        /*return "<h" + level + " id=\"" + slug + "\">" + '' +
+       /* return "<h" + level + " id=\"" + slug + "\">" + '' +
          '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
-         '' + "<a href=\"#" + slug + "\" class=\"anchor\"></a>" + text + "</h" + level + ">";*/
+         '' + "<a href=\"#" + slug + "\" class=\"anchor\"></a>" + text + "</h" + level + ">";
 
-        /*return "<h" + level + "><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
+        return "<h" + level + "><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
          '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
          '' + "</a>" + '<span id="' + slug + '">&nbsp;</span>' + text + "</h" + level + ">";*/
     };
@@ -167,9 +167,12 @@
         if (this.files == null || this.files[0] == null) {
             return;
         }
+
+        filename = delExtension(this.files[0].name);
         var reader = new FileReader();
         reader.readAsText(this.files[0]);
         reader.onload = function (e) {
+            saveFile(filename, e.target.result);
             document.getElementById("content").innerHTML = marked(e.target.result);
             $('pre code').each(function (i, block) {
                 hljs.highlightBlock(block);
@@ -359,12 +362,16 @@
     }
 
     function loadCacheFile() {
+
         var file = localStorage.getItem("file");
+        filename = localStorage.getItem("filename");
+        //alert(filename);
 
         if (file == null || file == "") {
+            $("#loader").css("display", "none");
             return;
         }
-        filename = localStorage.getItem("filename");
+
 
 
 
@@ -383,10 +390,12 @@
         Prism.highlightAll();
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
 
-        var options = {theme: 'hand'};
+        /*var options = {theme: 'hand'};
 
-        $(".diagram").sequenceDiagram({theme: 'hand'});
+        $(".diagram").sequenceDiagram({theme: 'hand'});*/
         collapseUpload();
+
+       // emojify.run(document.getElementById('content'))
         //anchors.add();
 
 
@@ -464,6 +473,10 @@
 
     $("#export").click(function () {
         /*console.log("export");*/
+
+        var htmlContent = localStorage.getItem("file");
+        htmlContent = marked(htmlContent);
+
         var htmlContent = '<!DOCTYPE html>' +
             '<html>' +
             '<head>' +
@@ -474,7 +487,8 @@
             '<link rel="stylesheet" href="http://10.64.0.124:81/assets/css/markdown.css">' +
             '</head>' +
             '<body>' +
-            $("#content").html() +
+                htmlContent +
+           /* $("#content").html() +*/
             '<script type="text/x-mathjax-config">' +
             "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
             "</script>" +
@@ -484,6 +498,7 @@
 
         var name = filename + ".html";
         var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
+        //var blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
         saveAs(blob, name);
     });
 
@@ -504,9 +519,25 @@
         }
     });
 
+    /*emojify.setConfig({
+
+        emojify_tag_type : 'div',           // Only run emojify.js on this element
+        only_crawl_id    : null,            // Use to restrict where emojify.js applies
+        img_dir          : 'http://10.64.0.124:81/assets/lib/emojify.js/dist/images/basic',  // Directory for emoji images
+        ignored_tags     : {                // Ignore the following tags
+            'SCRIPT'  : 1,
+            'TEXTAREA': 1,
+            'A'       : 1,
+            'PRE'     : 1,
+            'CODE'    : 1
+        }
+    });*/
     loadCacheFile();
-    genToc();
+    //genToc();
+    backToTop.init({
+        theme: 'classic', // Available themes: 'classic', 'sky', 'slate'
+        animation: 'fade' // Available animations: 'fade', 'slide'
+    });
 
 }());
-
 

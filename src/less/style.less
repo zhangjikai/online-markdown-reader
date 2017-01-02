@@ -264,7 +264,8 @@ nav {
 
 .remodal-custom {
   padding: 20px;
-
+  max-height: 350px;
+  overflow: auto;
 
 }
 
@@ -326,4 +327,57 @@ nav {
   display:block;
   height:50px; /* fixed header height*/
   margin:-50px 0 0; /* negative fixed header height */
+}
+
+/*setting dialog*/
+
+.setting-section{
+  margin-bottom: 1em;
+}
+
+.setting-title {
+  font-size: 1.4em;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+.setting-content {
+  text-align: left;
+}
+
+.custom-checkbox+label {
+  text-align: left;
+  line-height: 16px;
+  display: inline-block;
+  margin: 0.5em 1em;
+  &:before {
+    width: 14px;
+    height: 14px;
+  }
+
+  &:after {
+    left: 5px;
+    width: 5px;
+    height: 8px;
+  }
+}
+
+.custom-radio+label {
+  text-align: left;
+  line-height: 16px;
+  display: inline-block;
+  margin: 0.5em 1em;
+  &:before {
+    width: 14px;
+    height: 14px;
+  }
+
+  &:after {
+    left: 5px;
+    top: 5px;
+    width: 6px;
+    height: 6px;
+  }
 }

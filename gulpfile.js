@@ -16,6 +16,7 @@ gulp.task("move", function () {
             './bower_components/FileSaver.js/**/*FileSaver*js',
             './bower_components/js-beautify/js/lib/*beautify*js',
             './bower_components/loaders.css/*load*css',
+            './bower_components/emojify.js/dist/images/**/*png',
 
 
 
