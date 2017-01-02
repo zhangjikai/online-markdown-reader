@@ -34,12 +34,10 @@ Markdown 文件在线阅读器。
 在现有程序的基础上，我们可以很方便的添加扩展功能。基本流程大概就是引入扩展的库文件，在渲染 Markdown 文件时 调用库文件相应的方法。以添加时序图为例：  
 
 1. 确定时序图的代码标记
-
 <pre lang="no-highlight"><code>```seq
 时序图代码
 ```
 </code></pre>
-
 2. 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
 ```js
 var renderer = new marked.Renderer();
@@ -57,5 +55,13 @@ marked.setOptions({
 ```
 3. 引入 `js-sequence-diagrams` 相关文件
 ```js
-
+<link href="{{ bower directory }}/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet" />
+<script src="{{ bower directory }}/bower-webfontloader/webfont.js" />
+<script src="{{ bower directory }}/snap.svg/dist/snap.svg-min.js" />
+<script src="{{ bower directory }}/underscore/underscore-min.js" />
+<script src="{{ bower directory }}/js-sequence-diagrams/dist/sequence-diagram-min.js" />
+```
+4. 渲染 Markdown 文件时，调用相关函数
+```js
+$(".diagram").sequenceDiagram({theme: 'simple'});
 ```
