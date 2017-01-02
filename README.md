@@ -35,10 +35,8 @@ Markdown 文件在线阅读器。
 
 * 确定时序图的代码标记
 
-<pre lang="no-highlight"><code>```javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
-
+<pre lang="no-highlight"><code>```seq
+时序图代码
 ```
 </code></pre>
 
