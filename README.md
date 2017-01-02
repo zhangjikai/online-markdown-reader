@@ -1,5 +1,5 @@
 # Online markdown reader
-Markdown 文件在线阅读器。
+Markdown 在线阅读器。
 
 <!-- toc -->
 
