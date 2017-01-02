@@ -36,8 +36,7 @@ Markdown 文件在线阅读器。
 1. 确定时序图的代码标记
 <pre lang="no-highlight"><code>```seq
 时序图代码
-```
-</code></pre>
+```</code></pre>
 2. 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
 ```js
 var renderer = new marked.Renderer();
