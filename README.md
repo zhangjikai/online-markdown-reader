@@ -38,6 +38,7 @@ Markdown 文件在线阅读器。
 var s = "JavaScript syntax highlighting";
 alert(s);
 ```
+
 </code></pre>
 
 * 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
