@@ -35,5 +35,27 @@ Markdown 文件在线阅读器。
 
 1. 确定时序图的代码标记
 
-![](images/seq.png)  
-2. 
+<pre lang="no-highlight"><code>```seq
+时序图代码
+```
+</code></pre>
+
+2. 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
+```js
+var renderer = new marked.Renderer();
+var originalCodeFun = renderer.code;
+renderer.code = function (code, language) {
+    if (language == "seq") {
+        return "<div class='diagram' id='diagram'>" + code + "</div>"
+    } else {
+        return originalCodeFun.call(this, code, language);
+    }
+};
+marked.setOptions({
+    renderer: renderer
+});
+```
+3. 引入 `js-sequence-diagrams` 相关文件
+```js
+
+```
