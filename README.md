@@ -35,8 +35,7 @@ Markdown 文件在线阅读器。
 
 * 确定时序图的代码标记
 <pre lang="no-highlight"><code>```seq
-时序图代码
-```
+时序图代码 <br>```
 </code></pre>
 
 * 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
@@ -50,7 +49,6 @@ renderer.code = function (code, language) {
         return originalCodeFun.call(this, code, language);
     }
 };
-
 marked.setOptions({
     renderer: renderer
 });
@@ -64,7 +62,6 @@ marked.setOptions({
 <script src="{{ bower directory }}/underscore/underscore-min.js" />
 <script src="{{ bower directory }}/js-sequence-diagrams/dist/sequence-diagram-min.js" />
 ```
-
 * 渲染 Markdown 文件时，调用相关函数
 ```js
 $(".diagram").sequenceDiagram({theme: 'simple'});
