@@ -37,6 +37,7 @@ Markdown 文件在线阅读器。
 <pre lang="no-highlight"><code>```javascript
 var s = "JavaScript syntax highlighting";
 alert(s);
+
 ```
 
 </code></pre>
