@@ -378,9 +378,9 @@
         var ulCount = 0;
         minLevel = 5;
 
-        for(i = tocStartIndex; i < toc.length; i++) {
+        for (i = tocStartIndex; i < toc.length; i++) {
             singleToc = toc[i];
-            if(singleToc.level < minLevel) {
+            if (singleToc.level < minLevel) {
                 minLevel = singleToc.level;
             }
         }
@@ -607,7 +607,6 @@
         }
 
 
-
         if (Setting.mathjax) {
             Setting.mathjax == false;
             processMdContent(mdContent);
@@ -619,7 +618,6 @@
         }
 
 
-
         if (Setting.mathjax) {
             jsContent += '<script type="text/x-mathjax-config">' +
                 "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
@@ -627,12 +625,12 @@
                 '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
         }
 
-        if(Setting.backtop) {
+        if (Setting.backtop) {
             styleContent += '<link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">';
-            styleContent += ' <link rel="stylesheet" href="http://localhost:81/assets/lib/backtotop/backtotop.css">';
+            styleContent += ' <link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/backtotop.min.css">';
             jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
-            jsContent += '<script type="text/javascript" src="http://localhost:81/assets/lib/backtotop/backtotop.js"></script>';
-            jsContent +='<script type="text/javascript">backToTop.init()</script> '
+            jsContent += '<script type="text/javascript" src="http://markdown.zhangjikai.com/dist/js/backtotop.min.js"></script>';
+            jsContent += '<script type="text/javascript">backToTop.init()</script> '
         }
 
         var htmlContent = '<!DOCTYPE html>' +
@@ -640,9 +638,11 @@
             '<head>' +
             '<meta charset="UTF-8">' +
             '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-            '<title>markdown</title>' +
+            '<title>' +
+            mdName +
+            '</title>' +
             styleContent +
-            '<link rel="stylesheet" href="http://10.64.0.124:81/assets/css/markdown.css">' +
+            '<link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/markdown.min.css">' +
             '</head>' +
             '<body>' +
             htmlContent +
