@@ -6,14 +6,16 @@
   "devDependencies": {
     "browser-sync": "^2.17.3",
     "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.3.2",
     "gulp-less": "^3.3.0",
+    "gulp-minify": "0.0.14",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
-    "plumber": "^0.4.8"
+    "gulp-rename": "^1.2.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "zhangjikai <zhangjk1993@gmail.com>",
-  "license": ""
+  "license": "MIT"
 }

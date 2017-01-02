@@ -7,10 +7,42 @@
     var imgSelect = document.getElementById('img-select');
     var cacheImages = {};
     var targetFile;
-    var filename = "";
+    var mdName = "";
+    var mdContent = "";
+    var maxSize = 1024 * 1024 * 4;
+
+    var toc = [];
+    var tocDumpIndex = 0;
+    var tocStr = "";
+    var tocStartIndex = 0;
+    var tocTagPos = -1;
+    var hasTocTag = false;
+    var minLevel = 5;
+
+    var Constants = {
+        highlight: "highlight",
+        prism: "prism",
+        mdName: "mdName",
+        mdContent: "mdContent",
+        tocTag: "<!-- toc -->",
+        setting: "setting"
+    };
+
+    var Setting = {
+        compressImg: true,
+        genToc: true,
+        tocLevel: 5,
+        highlight: Constants.prism,
+        cache: true,
+        mathjax: true,
+        sd: true,
+        emoji: true,
+        backtop: true
+    };
 
     var renderer = new marked.Renderer();
 
+    /* Todo列表 */
     renderer.listitem = function (text) {
         if (/^\s*\[[x ]\]\s*/.test(text)) {
             text = text
@@ -22,21 +54,13 @@
         }
     };
 
-
-    var toc = []; // your table of contents as a list.
-    var tocLevel = 5;
-    var tocDumpIndex = 0;
-    var tocStr = "";
-
     renderer.heading = function (text, level) {
-
         var slug = text.toLowerCase().replace(/[\s]+/g, '-');
-
-        if(tocStr.indexOf(slug) != -1) {
+        if (tocStr.indexOf(slug) != -1) {
             slug += "-" + tocDumpIndex;
             tocDumpIndex++;
-
         }
+
         tocStr += slug;
         toc.push({
             level: level,
@@ -44,44 +68,25 @@
             title: text
         });
 
-        /*return "<h" + level + " id=\"" + slug + "\"><a href=\"#" + slug + "\" class=\"anchor\">"  + "</a>" + text + "</h" + level + ">";*/
         return "<h" + level + " id=\"" + slug + "\"><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
             '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
             '' + "</a>" + text + "</h" + level + ">";
-
-       /* return "<h" + level + " id=\"" + slug + "\">" + '' +
-         '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
-         '' + "<a href=\"#" + slug + "\" class=\"anchor\"></a>" + text + "</h" + level + ">";
-
-        return "<h" + level + "><a href=\"#" + slug + "\" class=\"anchor\">" + '' +
-         '<svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>' +
-         '' + "</a>" + '<span id="' + slug + '">&nbsp;</span>' + text + "</h" + level + ">";*/
     };
 
-    var codeFun = renderer.code;
+    var originalCodeFun = renderer.code;
     renderer.code = function (code, language) {
-        if(language == "latex") {
-            console.log(code);
-            return "<div class='diagram' id='diagram'>" + code+"</div>"
+        if (language == "seq") {
+            return "<div class='diagram' id='diagram'>" + code + "</div>"
         } else {
-            return codeFun.call(this, code, language);
+            return originalCodeFun.call(this, code, language);
         }
-
     };
 
     marked.setOptions({
-        renderer: renderer,
-        gfm: true
-        /*highlight: function (code) {
-            var value = hljs.highlightAuto(code).value;
-            return value;
-        }*/
+        renderer: renderer
     });
 
-
-    //refreshAuto();
     function refreshAuto() {
-        /*var int = self.setInterval(click, 3000)*/
         setInterval(load, 3000);
     }
 
@@ -92,145 +97,191 @@
         }
         var reader = new FileReader();
         reader.readAsText(targetFile);
-        filename = delExtension(targetFile.name);
+        mdName = delExtension(targetFile.name);
 
         reader.onload = function (e) {
             document.getElementById("content").innerHTML = marked(e.target.result);
-            /*$('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });*/
+
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
         }
     }
-    function dragEnter(e) {
+
+    function dragMdEnter(e) {
         e.stopPropagation();
         e.preventDefault();
-        //drop.style.borderColor = "#3bafda";
         $("#upload").css("border-color", "#3bafda");
     }
 
-    function dragLeave(e) {
+    function dragMdLeave(e) {
         e.stopPropagation();
         e.preventDefault();
         $("#upload").css("border-color", "#ddd");
     }
 
-    function readDropFile(e) {
-
+    function dropMdFile(e) {
         e.stopPropagation();
         e.preventDefault();
-
-
         $("#upload").css("border-color", "#ddd");
 
-        var reader = new FileReader();
-        //reader.readAsText(e.originalEvent.dataTransfer.files[0]);
-        //filename = delExtension(e.originalEvent.dataTransfer.files[0].name);
-        targetFile = e.dataTransfer.files[0];
-        if (!checkMdExt(targetFile.name)) {
-            var ins = $('[data-remodal-id=md-tip]').remodal();
-            ins.open();
+        if (e.dataTransfer.files == null || e.dataTransfer.files[0] == null) {
             return;
         }
-        $("#loader").css("display", "block");
-        reader.readAsText(targetFile);
-        filename = delExtension(e.dataTransfer.files[0].name);
-
-        reader.onload = function (e) {
-
-
-            var mdContent = e.target.result;
-            console.log(mdContent.indexOf("<!-- toc -->"));
-            $("#loader").css("display", "none");
-
-
-            saveFile(filename, e.target.result);
-            toc.length = 0;
-            document.getElementById("content").innerHTML = marked(e.target.result);
-            //$('pre code').each(function (i, block) {
-            //    hljs.highlightBlock(block);
-            //});
-
-            $("pre").addClass("line-numbers");
-            Prism.highlightAll();
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
-            collapseUpload();
-            genToc();
-            $("#loader").css("display", "none");
-        }
+        processMdFile(e.dataTransfer.files[0]);
     }
 
-    function readSelectFile(e) {
+
+    function selectMdFile(e) {
         e.stopPropagation();
         e.preventDefault();
-
         if (this.files == null || this.files[0] == null) {
             return;
         }
+        processMdFile(this.files[0]);
+    }
 
-        filename = delExtension(this.files[0].name);
+    function processMdFile(mdFile) {
+        targetFile = mdFile;
+        if (!checkMdExt(targetFile.name)) {
+            var modal = $('[data-remodal-id=md-tip]').remodal();
+            modal.open();
+            return;
+        }
+        $("#loader").css("display", "block");
         var reader = new FileReader();
-        reader.readAsText(this.files[0]);
+        reader.readAsText(targetFile);
+        mdName = delExtension(targetFile.name);
+
         reader.onload = function (e) {
-            saveFile(filename, e.target.result);
-            document.getElementById("content").innerHTML = marked(e.target.result);
+            mdContent = e.target.result;
+
+            if (Setting.cache) {
+                saveMdFile(mdName, mdContent);
+            } else {
+                removeCacheFile();
+            }
+            processMdContent(mdContent);
+        };
+
+    }
+
+    function processMdContent(content) {
+        toc.length = 0;
+        tocStr = "";
+        calTocStart(content);
+        $("#content").html(marked(content));
+
+        replaceImage();
+
+        if (Setting.genToc) {
+            genToc();
+        }
+
+        if (Setting.highlight == Constants.highlight) {
             $('pre code').each(function (i, block) {
                 hljs.highlightBlock(block);
             });
+        } else {
+            $("pre").addClass("line-numbers");
+            Prism.highlightAll();
+        }
+
+        if (Setting.mathjax) {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
-            collapseUpload();
+        }
+
+        if (Setting.emoji) {
+            emojify.run(document.getElementById('content'))
+        }
+
+        if (Setting.sd) {
+            $(".diagram").sequenceDiagram({theme: 'simple'});
+        }
+
+        $("#loader").css("display", "none");
+
+        collapseUpload();
+    }
+
+    function refresh() {
+        if (targetFile == null) {
+            processMdContent(mdContent);
+        } else {
+            processMdFile(targetFile);
         }
     }
 
+    function saveMdFile(name, content) {
 
-    function imgDragEnter(e) {
+        if (content.length > maxSize) {
+            var sizeTip = $('[data-remodal-id=size-tip]').remodal();
+            sizeTip.open();
+            removeCacheFile();
+            return;
+        }
+        localStorage.setItem(Constants.mdName, name);
+        localStorage.setItem(Constants.mdContent, content);
+    }
+
+    function removeCacheFile() {
+        localStorage.removeItem(Constants.mdName);
+        localStorage.removeItem(Constants.mdContent);
+    }
+
+    function dragImgEnter(e) {
         e.stopPropagation();
         e.preventDefault();
-        //drop.style.borderColor = "#3bafda";
         $("#img-upload").css("border-color", "#3bafda");
     }
 
-    function imgDragLeave(e) {
+    function dragImgLeave(e) {
         e.stopPropagation();
         e.preventDefault();
         $("#img-upload").css("border-color", "#ddd");
     }
 
-    function imgDrop(e) {
+    function dropImgFile(e) {
 
         e.stopPropagation();
         e.preventDefault();
-
-        var inst = $('[data-remodal-id=modal]').remodal();
-        inst.close();
+        var imgModal = $('[data-remodal-id=modal]').remodal();
+        imgModal.close();
         $("#img-upload").css("border-color", "#ddd");
-        //console.log(e);
+        processImages(e.dataTransfer.files)
 
-        var files = e.dataTransfer.files;
+    }
 
-        var length = files.length;
+    function selectImages(e) {
 
+        e.stopPropagation();
+        e.preventDefault();
+        var imgModal = $('[data-remodal-id=modal]').remodal();
+        imgModal.close();
+        $("#img-upload").css("border-color", "#ddd");
+        processImages(this.files)
 
+    }
+
+    function processImages(imgFiles) {
+
+        var length = imgFiles.length;
         var i, index = 0;
 
-        for (i = 0; i < files.length; i++) {
-            if (!checkImgExt(files[i].name)) {
-                var inst = $('[data-remodal-id=img-tip]').remodal();
-                inst.open();
+        for (i = 0; i < imgFiles.length; i++) {
+            if (!checkImgExt(imgFiles[i].name)) {
+                var imgTip = $('[data-remodal-id=img-tip]').remodal();
+                imgTip.open();
                 return;
             }
         }
+
         $("#loader").css("display", "block");
-        for (i = 0; i < files.length; i++) {
-            var file = files[i];
+        for (i = 0; i < imgFiles.length; i++) {
+            var file = imgFiles[i];
             var reader = new FileReader();
             reader.readAsDataURL(file);
             (function (reader, file) {
                 reader.onload = function (e) {
-
-                    if (!cacheImages.hasOwnProperty(file.name)) {
-                        //console.log(222);
-                        //cacheImages[file.name] = e.target.result;
+                    if (Setting.compressImg) {
                         var image = new Image();
                         image.src = e.target.result;
                         var ext = getImgExtension(file.name);
@@ -238,10 +289,9 @@
                         if (ext.toLowerCase() == "jpg" || ext.toLowerCase() == "jpeg") {
                             format = "image/jpeg";
                         }
-                        // console.log(format);
                         cacheImages[file.name] = compressImage(image, format);
-                        /*image.src = compressImage(image, format);
-                         $("#content").prepend(image);*/
+                    } else {
+                        cacheImages[file.name] = e.target.result;
                     }
                     index++;
                     if (index == length) {
@@ -252,19 +302,24 @@
         }
     }
 
-
     function replaceImage() {
         var images = $("img");
+
         var i;
         for (i = 0; i < images.length; i++) {
-            var imgSrc = images[i].src;
+            var imgSrc;
+            if ($(images[i]).attr("pname") == null) {
+                imgSrc = images[i].src;
+                $(images[i]).attr("pName", imgSrc);
+            } else {
+                imgSrc = $(images[i]).attr("pname");
+            }
+
             var imgName = getImgName(imgSrc);
             if (cacheImages.hasOwnProperty(imgName)) {
                 images[i].src = cacheImages[imgName];
-
             }
         }
-
         $("#loader").css("display", "none");
     }
 
@@ -279,39 +334,62 @@
             format = "image/png";
         }
 
-        console.log(format);
-        // calculate the width and height, constraining the proportions
-
         if (width > max_width) {
-            //height *= max_width / width;
             height = Math.round(height *= max_width / width);
             width = max_width;
         }
-
 
         // resize the canvas and draw the image data into it
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-
         return canvas.toDataURL(format);
     }
 
 
+    function calTocStart(mdContent) {
+        var heading = /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/igm;
+        var match;
+        tocTagPos = mdContent.indexOf(Constants.tocTag);
+        tocStartIndex = 0;
+        if (tocTagPos == -1) {
+            hasTocTag = false;
+            return;
+        }
+
+        hasTocTag = true;
+        while ((match = heading.exec(mdContent)) != null) {
+            //console.log(match.index);
+            if (match.index > tocTagPos) {
+                break;
+            }
+            tocStartIndex++;
+        }
+    }
+
     function genToc() {
-        console.log(toc);
+
         var lastLevel = 0;
+
+        var tocLevel = Setting.tocLevel;
         var i, j, singleToc;
         var tocHtml = "";
         var ulCount = 0;
+        minLevel = 5;
 
+        for(i = tocStartIndex; i < toc.length; i++) {
+            singleToc = toc[i];
+            if(singleToc.level < minLevel) {
+                minLevel = singleToc.level;
+            }
+        }
+        lastLevel = minLevel - 1;
 
-
-        for (i = 0; i < toc.length; i++) {
+        for (i = tocStartIndex; i < toc.length; i++) {
             singleToc = toc[i];
 
-            if(singleToc.level > tocLevel) {
+            if (singleToc.level > tocLevel) {
                 continue;
             }
             if (lastLevel > singleToc.level) {
@@ -324,7 +402,7 @@
             }
 
             if (lastLevel < singleToc.level) {
-                for (j = singleToc.level -lastLevel; j > 0; j--) {
+                for (j = singleToc.level - lastLevel; j > 0; j--) {
                     tocHtml += "<ul>";
                     ulCount++;
                 }
@@ -338,68 +416,109 @@
             tocHtml += "</ul>"
         }
 
-        $("#content").prepend(tocHtml);
-
-
-    }
-
-
-    function click() {
-        //console.log(111);
-        if ("createEvent" in document) {
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("change", false, true);
-            fileSelect.dispatchEvent(evt);
+        if (hasTocTag) {
+            var content = $("#content").html();
+            content = content.replace(Constants.tocTag, tocHtml);
+            $("#content").html(content);
         } else {
-            fileSelect.fireEvent("onchange");
+            $("#content").prepend(tocHtml);
         }
     }
 
-
-    function saveFile(filename, data) {
-        localStorage.setItem("filename", filename);
-        localStorage.setItem("file", data);
-    }
-
     function loadCacheFile() {
-
-        var file = localStorage.getItem("file");
-        filename = localStorage.getItem("filename");
-        //alert(filename);
-
+        var file = localStorage.getItem(Constants.mdContent);
         if (file == null || file == "") {
             $("#loader").css("display", "none");
             return;
         }
 
-
-
-
-        var heading =  /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/igm;
-        var match, index = 0;
-       /* console.log(heading.exec(file));*/
-        /*while((match = heading.exec(file)) != null) {
-            console.log(match.index)
-            index++;
-        }*/
-        console.log(index);
-        toc.length = 0;
-        document.getElementById("content").innerHTML = marked(file);
-
-        $("pre").addClass("line-numbers");
-        Prism.highlightAll();
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
-
-        /*var options = {theme: 'hand'};
-
-        $(".diagram").sequenceDiagram({theme: 'hand'});*/
-        collapseUpload();
-
-       // emojify.run(document.getElementById('content'))
-        //anchors.add();
-
-
+        mdName = localStorage.getItem(Constants.mdName);
+        console.log(mdName);
+        mdContent = file;
+        processMdContent(mdContent);
         $("#loader").css("display", "none");
+    }
+
+    function loadSetting() {
+        var tmpSetting = localStorage.getItem(Constants.setting);
+        if (tmpSetting == null) {
+            return;
+        }
+        tmpSetting = JSON.parse(tmpSetting);
+        for (var key in tmpSetting) {
+            var newValue = tmpSetting[key];
+            if (newValue === undefined) {
+                console.warn('\'' + key + '\' parameter is undefined.');
+                continue;
+            }
+            if (key in Setting) {
+                Setting[key] = newValue;
+            }
+        }
+    }
+
+    function saveSetting() {
+        processMdContent(mdContent);
+        localStorage.setItem(Constants.setting, JSON.stringify(Setting));
+    }
+
+    function addSetting() {
+
+        $("[name='set']").each(function (index, ele) {
+
+            $(ele).prop("checked", Setting[$(ele).attr("ref")]);
+            $(ele).change(function (e) {
+                //console.log($(ele).is(":checked"))
+                Setting[$(ele).attr("ref")] = $(ele).is(":checked");
+                saveSetting();
+            })
+        });
+
+        $("#s_toc").prop("checked", Setting['genToc']);
+        $("#toc-level").val(Setting['tocLevel']);
+
+        $("#s_toc").change(function (e) {
+            Setting["genToc"] = $("#s_toc").is(":checked");
+
+            if (Setting["genToc"]) {
+                $("#toc-level").prop("disabled", false);
+            } else {
+                $("#toc-level").prop("disabled", true);
+            }
+            saveSetting();
+        });
+
+        $("#toc-level").change(function (e) {
+            var val = parseInt($("#toc-level").val());
+            if (val < 1) {
+                val = 1;
+            }
+            if (val > 5) {
+                val = 5;
+            }
+            Setting["tocLevel"] = val;
+            $("#toc-level").val(val);
+            saveSetting();
+        });
+
+        if (Setting["highlight"] == Constants.highlight) {
+            $("#s_highlight").prop("checked", true);
+        } else {
+            $("#s_prism").prop("checked", true);
+        }
+
+        $("[name='high']").each(function (index, ele) {
+            $(ele).change(function (e) {
+                var text = $(ele).prop("id");
+                if (text == "s_highlight") {
+                    Setting["highlight"] = Constants.highlight;
+                } else {
+                    Setting["highlight"] = Constants.prism;
+                }
+                saveSetting();
+            })
+        })
+
     }
 
     function collapseUpload() {
@@ -440,24 +559,18 @@
         }
     }
 
+    fileSelect.addEventListener("dragenter", dragMdEnter, false);
+    fileSelect.addEventListener("dragleave", dragMdLeave, false);
+    fileSelect.addEventListener('drop', dropMdFile, false);
+    fileSelect.addEventListener("change", selectMdFile, false);
 
-    fileSelect.addEventListener("dragenter", dragEnter, false);
-    fileSelect.addEventListener("dragleave", dragLeave, false);
-    fileSelect.addEventListener('drop', readDropFile, false);
-    fileSelect.addEventListener("change", readSelectFile, false);
+    imgSelect.addEventListener("dragenter", dragImgEnter, false);
+    imgSelect.addEventListener("dragleave", dragImgLeave, false);
+    imgSelect.addEventListener('drop', dropImgFile, false);
+    imgSelect.addEventListener('change', selectImages, false);
 
-    imgSelect.addEventListener("dragenter", imgDragEnter, false);
-    imgSelect.addEventListener("dragleave", imgDragLeave, false);
-    imgSelect.addEventListener('drop', imgDrop, false);
-
-    //$("#select-file").on("dragenter", dragEnter);
-    //$("#select-file").on("dragleave", dragLeave);
-    //$("#select-file").on("drop", fileDrop);
-    //$("#select-file").on("change", fileSelect);
 
     $("#fold").click(function () {
-
-        console.log($("#fold").attr("expand"));
         if ($("#fold").attr("expand") == "true") {
             $("#fold").removeClass("fa-minus-square");
             $("#fold").addClass("fa-plus-square");
@@ -472,10 +585,55 @@
     });
 
     $("#export").click(function () {
-        /*console.log("export");*/
 
-        var htmlContent = localStorage.getItem("file");
-        htmlContent = marked(htmlContent);
+        /*var htmlContent = localStorage.getItem("file");
+         htmlContent = marked(htmlContent);*/
+
+        var htmlContent = "";
+
+
+        var styleContent = "";
+        var jsContent = "";
+
+        if (Setting.highlight == Constants.highlight) {
+            styleContent += '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">';
+        } else {
+            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">'
+            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">';
+        }
+
+        if (Setting.emoji) {
+            styleContent += '<link href="http://cdn.bootcss.com/emojify.js/1.1.0/css/basic/emojify.min.css" rel="stylesheet">';
+        }
+
+
+
+        if (Setting.mathjax) {
+            Setting.mathjax == false;
+            processMdContent(mdContent);
+            htmlContent = $("#content").html();
+            Setting.mathjax == true;
+            processMdContent(mdContent);
+        } else {
+            htmlContent = $("#content").html();
+        }
+
+
+
+        if (Setting.mathjax) {
+            jsContent += '<script type="text/x-mathjax-config">' +
+                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
+                "</script>" +
+                '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+        }
+
+        if(Setting.backtop) {
+            styleContent += '<link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">';
+            styleContent += ' <link rel="stylesheet" href="http://localhost:81/assets/lib/backtotop/backtotop.css">';
+            jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
+            jsContent += '<script type="text/javascript" src="http://localhost:81/assets/lib/backtotop/backtotop.js"></script>';
+            jsContent +='<script type="text/javascript">backToTop.init()</script> '
+        }
 
         var htmlContent = '<!DOCTYPE html>' +
             '<html>' +
@@ -483,61 +641,47 @@
             '<meta charset="UTF-8">' +
             '<meta name="viewport" content="width=device-width, initial-scale=1">' +
             '<title>markdown</title>' +
-            '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">' +
+            styleContent +
             '<link rel="stylesheet" href="http://10.64.0.124:81/assets/css/markdown.css">' +
             '</head>' +
             '<body>' +
-                htmlContent +
-           /* $("#content").html() +*/
-            '<script type="text/x-mathjax-config">' +
-            "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
-            "</script>" +
-            '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>' +
+            htmlContent +
+            jsContent +
             '</body>' +
             '</html>';
 
-        var name = filename + ".html";
+        var name = mdName + ".html";
         var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
-        //var blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
         saveAs(blob, name);
     });
 
-    $("#refresh").click(function () {
-        if (targetFile == null) {
-            return;
-        }
-        var reader = new FileReader();
-        reader.readAsText(targetFile);
-        filename = delExtension(targetFile.name);
 
-        reader.onload = function (e) {
-            document.getElementById("content").innerHTML = marked(e.target.result);
-            $('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
+    $("#refresh").click(function () {
+        refresh();
+    });
+
+    emojify.setConfig({
+        emojify_tag_type: 'div',           // Only run emojify.js on this element
+        only_crawl_id: null,            // Use to restrict where emojify.js applies
+        img_dir: 'http://cdn.bootcss.com/emojify.js/1.0/images/basic',  // Directory for emoji images
+        ignored_tags: {                // Ignore the following tags
+            'SCRIPT': 1,
+            'TEXTAREA': 1,
+            'A': 1,
+            'PRE': 1,
+            'CODE': 1
         }
     });
 
-    /*emojify.setConfig({
-
-        emojify_tag_type : 'div',           // Only run emojify.js on this element
-        only_crawl_id    : null,            // Use to restrict where emojify.js applies
-        img_dir          : 'http://10.64.0.124:81/assets/lib/emojify.js/dist/images/basic',  // Directory for emoji images
-        ignored_tags     : {                // Ignore the following tags
-            'SCRIPT'  : 1,
-            'TEXTAREA': 1,
-            'A'       : 1,
-            'PRE'     : 1,
-            'CODE'    : 1
-        }
-    });*/
-    loadCacheFile();
-    //genToc();
     backToTop.init({
         theme: 'classic', // Available themes: 'classic', 'sky', 'slate'
         animation: 'fade' // Available animations: 'fade', 'slide'
     });
+
+    loadSetting();
+    addSetting();
+    loadCacheFile();
+
 
 }());
 

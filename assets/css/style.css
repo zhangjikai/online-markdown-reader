@@ -3,6 +3,9 @@ body {
   font: 14px/1.42857 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: #fff;
 }
+#content {
+  margin-top: 1em;
+}
 nav {
   height: 48px;
   width: 100%;
@@ -274,6 +277,9 @@ nav a#openup {
 }
 .setting-content {
   text-align: left;
+}
+.toc-level {
+  width: 50px;
 }
 .custom-checkbox + label {
   text-align: left;

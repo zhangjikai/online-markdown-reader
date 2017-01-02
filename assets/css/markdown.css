@@ -3,7 +3,7 @@ body {
     font-family: "ubuntu", "Tahoma", "Microsoft YaHei", arial, sans-serif;
     color: #444444;
     line-height: 1;
-    padding:0px 10px;
+    padding:10px;
 }
 
 img {
@@ -296,7 +296,7 @@ table td:first-child, table th:first-child {
 
 
 .task-list-item-checkbox {
-    margin: 0 0.2em 0.25em -1.4em;
+    margin: 0 0.2em 0.25em -2.3em;
     vertical-align: middle;
 }
 

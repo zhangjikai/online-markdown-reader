@@ -4,20 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Markdown Reader</title>
-    <!--<link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">-->
 
+    <!--<link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">
     <link rel="stylesheet" href="assets/lib/prism/prism.css">
     <link rel="stylesheet" href="assets/lib/font-awesome/css/font-awesome.min.css">
-    <link href="//cdn.bootcss.com/remodal/1.1.0/remodal.min.css" rel="stylesheet">
-    <link href="//cdn.bootcss.com/remodal/1.1.0/remodal-default-theme.min.css" rel="stylesheet">
-    <link href="bower_components/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/css/basic/emojify.min.css" />
-    <link rel="stylesheet" href="assets/lib/backtotop/backtotop.css">
-    <link rel="stylesheet" href="bower_components/magic-check/css/magic-check.min.css">
+    <link href="assets/lib/remodal/dist/remodal.css" rel="stylesheet">
+    <link href="assets/lib/remodal/dist/remodal-default-theme.css" rel="stylesheet">
+    <link href="assets/lib/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="assets/lib/emojify.js/dist/css/basic/emojify.min.css"/>
+    <link rel="stylesheet" href="assets/css/backtotop.css">
+    <link rel="stylesheet" href="assets/lib/magic-check/css/magic-check.min.css">
 
     <link rel="stylesheet" href="assets/css/markdown.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/lib/loaders.css/loaders.min.css">
+    <link rel="stylesheet" href="assets/lib/loaders.css/loaders.min.css">-->
+
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/highlight.js/9.9.0/styles/github.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/remodal/1.1.0/remodal.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/remodal/1.1.0/remodal-default-theme.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/emojify.js/1.1.0/css/basic/emojify.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/loaders.css/0.1.2/loaders.min.css" rel="stylesheet">
+    <link href="dist/lib/js-sequence-diagrams/dist/sequence-diagram-min.css" rel="stylesheet"/>
+    <link href="dist/lib/magic-check/css/magic-check.min.css" rel="stylesheet">
+
+    <link href="dist/css/backtotop.min.css" rel="stylesheet">
+    <link href="dist/css/markdown.min.css" rel="stylesheet">
+    <link href="dist/css/style.min.css" rel="stylesheet">
+
+
 
 </head>
 <body>
@@ -27,7 +44,7 @@
     <ul class="cf">
         <li><a href="javascript:void(0);" class="first-menu" id="export">导出</a></li>
         <li><a href="#modal" class="popup-modal" id="image">图片</a></li>
-        <li><a href="javascript:void(0);" id="refresh">刷新文件</a></li>
+        <li><a href="javascript:void(0);" id="refresh">刷新</a></li>
         <li><a href="#setting" class="popup-modal" id="setting">设置</a></li>
     </ul>
 </nav>
@@ -60,7 +77,6 @@
         <button class="select-file-style" id="drop">选择或者拖拽 Markdown 文件到此</button>
     </div>
 </div>
-
 
 
 <div id="content"></div>
@@ -97,6 +113,14 @@
 
 </div>
 
+<div class="remodal remodal-custom" data-remodal-id="size-tip">
+    <button data-remodal-action="close" class="remodal-close custom-remodal-close"></button>
+    <div>
+        <span>文件过大，无法缓存</span>
+    </div>
+
+</div>
+
 <div class="remodal remodal-custom" data-remodal-id="setting">
     <button data-remodal-action="close" class="remodal-close custom-remodal-close"></button>
 
@@ -105,7 +129,7 @@
             <span>图片</span>
         </div>
         <div class="setting-content">
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_img">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_img" ref="compressImg">
             <label for="s_img">压缩图片</label>
         </div>
     </div>
@@ -115,8 +139,12 @@
             <span>目录</span>
         </div>
         <div class="setting-content">
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_toc">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" id="s_toc">
             <label for="s_toc">自动生成目录</label>
+
+
+            <label>最小目录级别</label>
+            <input type="number" class="toc-level" id="toc-level">
         </div>
     </div>
 
@@ -125,10 +153,10 @@
             <span>代码高亮</span>
         </div>
         <div class="setting-content">
-            <input class="magic-radio custom-radio" type="radio" name="radio" id="s_highlight">
-            <label for="s_highlight">highlight.js</label>
-            <input class="magic-radio custom-radio" type="radio" name="radio" id="s_prism">
+            <input class="magic-radio custom-radio" type="radio" name="high" id="s_prism">
             <label for="s_prism">prism.js</label>
+            <input class="magic-radio custom-radio" type="radio" name="high" id="s_highlight">
+            <label for="s_highlight">highlight.js</label>
         </div>
     </div>
 
@@ -137,7 +165,7 @@
             <span>缓存</span>
         </div>
         <div class="setting-content">
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_cache">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_cache" ref="cache">
             <label for="s_cache">缓存上次打开的文件（文件不超过4MB）</label>
         </div>
     </div>
@@ -147,12 +175,12 @@
             <span>扩展</span>
         </div>
         <div class="setting-content">
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_math">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_math" ref="mathjax">
             <label for="s_math">MathJax</label>
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_seq">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_seq" ref="sd">
             <label for="s_seq">Sequence Diagram</label>
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_emoij">
-            <label for="s_emoij">emoij</label>
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_emoji" ref="emoji">
+            <label for="s_emoji">emoji</label>
         </div>
     </div>
 
@@ -161,11 +189,10 @@
             <span>导出</span>
         </div>
         <div class="setting-content">
-            <input class="magic-checkbox custom-checkbox" type="checkbox" name="layout" id="s_backtop">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_backtop" ref="backtop">
             <label for="s_backtop">添加返回顶部按钮</label>
         </div>
     </div>
-
 
 
 </div>
@@ -174,10 +201,11 @@
 
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+
 </script>
 <script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
+<!--<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="assets/lib/prism/prism.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>
@@ -185,17 +213,41 @@
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-css.js"></script>
 <script type="text/javascript" src="assets/lib/js-beautify/js/lib/beautify-html.js"></script>
-<script type="text/javascript" src="assets/lib/backtotop/backtotop.js"></script>
-<script src="//cdn.bootcss.com/remodal/1.1.0/remodal.min.js"></script>
+<script type="text/javascript" src="assets/lib/remodal/dist/remodal.min.js"></script>
+<script type="text/javascript" src="assets/lib/bower-webfontloader/webfont.js"></script>
+<script type="text/javascript" src="assets/lib/snap.svg/dist/snap.svg-min.js"></script>
+<script type="text/javascript" src="assets/lib/underscore/underscore-min.js"></script>
+<script type="text/javascript" src="assets/lib/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
+<script type="text/javascript" src="assets/lib/emojify.js/dist/js/emojify.min.js"></script>
 
-
-<!--<script type="text/javascript" src="bower_components/bower-webfontloader/webfont.js" ></script>
-<script type="text/javascript"  src="bower_components/snap.svg/dist/snap.svg-min.js" ></script>
-<script type="text/javascript"  src="bower_components/underscore/underscore-min.js" ></script>
-<script type="text/javascript"  src="bower_components/js-sequence-diagrams/dist/sequence-diagram.js" ></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"></script>-->
-
+<script type="text/javascript" src="src/js/backtotop.js"></script>
 <script type="text/javascript" src="src/js/nav.js"></script>
-<script type="text/javascript" src="src/js/index.js"></script>
+<script type="text/javascript" src="src/js/index.js"></script>-->
+
+
+<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="dist/lib/highlightjs/highlight.pack.min.js"></script>
+<script src="dist/lib/prism/prism.js"></script>
+<script src="http://cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+<script src="http://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+<script src="http://cdn.bootcss.com/js-beautify/1.6.7/beautify.min.js"></script>
+<script src="http://cdn.bootcss.com/js-beautify/1.6.7/beautify-css.min.js"></script>
+<script src="http://cdn.bootcss.com/js-beautify/1.6.7/beautify-html.min.js"></script>
+<script src="http://cdn.bootcss.com/remodal/1.1.0/remodal.min.js"></script>
+<script src="dist/lib/bower-webfontloader/webfont.js"></script>
+<script src="http://cdn.bootcss.com/snap.svg/0.4.1/snap.svg-min.js"></script>
+<script src="http://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="dist/lib/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
+<script src="http://cdn.bootcss.com/emojify.js/1.1.0/js/emojify.min.js"></script>
+
+<script src="dist/js/backtotop.min.js"></script>
+<script src="dist/js/nav.min.js"></script>
+<script src="dist/js/index.min.js"></script>
+
+
+
+
+
+
 </body>
 </html>
