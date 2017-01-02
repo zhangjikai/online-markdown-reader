@@ -34,8 +34,12 @@ Markdown 文件在线阅读器。
 在现有程序的基础上，我们可以很方便的添加扩展功能。基本流程大概就是引入扩展的库文件，在渲染 Markdown 文件时 调用库文件相应的方法。以添加时序图为例：  
 
 * 确定时序图的代码标记
-<pre lang="no-highlight"><code>```seq
-时序图代码 \n ```</code></pre>
+<pre lang="no-highlight"><code>```javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
+```
+</code></pre>
+
 * 修改 `marked` 中对于代码块的解析函数，添加对于时序图标记的支持
 ```js
 var renderer = new marked.Renderer();
