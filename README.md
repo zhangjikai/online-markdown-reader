@@ -9,7 +9,7 @@ Markdown 在线阅读器。
   * [Todo列表](#todo%E5%88%97%E8%A1%A8)
   * [Mathjax](#mathjax)
   * [时序图](#%E6%97%B6%E5%BA%8F%E5%9B%BE)
-  * [Emoji](#Emoji)
+  * [Emoji](#emoji)
   * [自定义扩展](#自定义扩展)
 - [其他说明](#%E5%85%B6%E4%BB%96%E8%AF%B4%E6%98%8E)
   * [Markdown 文件解析](#markdown-%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90)
@@ -54,7 +54,7 @@ Markdown 在线阅读器。
 </code></pre>
 
 ### Emoji
-Emoji表情参见[EMOJI CHEAT SHEET](http://www.webpagefx.com/tools/emoji-cheat-sheet/)
+Emoji表情参见 [EMOJI CHEAT SHEET](http://www.webpagefx.com/tools/emoji-cheat-sheet/)
 
 ### 自定义扩展
 在现有程序的基础上，我们可以很方便的添加扩展功能。基本流程大概就是引入扩展的库文件，在渲染 Markdown 文件时 调用库文件相应的方法。以添加时序图为例：  
