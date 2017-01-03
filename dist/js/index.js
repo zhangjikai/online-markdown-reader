@@ -668,10 +668,10 @@
 
 
         if (Setting.mathjax) {
-            Setting.mathjax == false;
+            Setting.mathjax = false;
             processMdContent(mdContent);
             htmlContent = $("#content").html();
-            Setting.mathjax == true;
+            Setting.mathjax = true;
             processMdContent(mdContent);
         } else {
             htmlContent = $("#content").html();
