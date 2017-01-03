@@ -8,16 +8,16 @@ Markdown 在线阅读器。
 - [扩展语法](#%E6%89%A9%E5%B1%95%E8%AF%AD%E6%B3%95)
   * [Todo列表](#todo%E5%88%97%E8%A1%A8)
   * [Mathjax](#mathjax)
-  * [时序图](#%E6%97%B6%E5%BA%8F%E5%9B%BE)
   * [Emoji](#emoji)
-  * [自定义扩展](#自定义扩展)
+  * [自定义扩展](#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95)
+- [导出](#%E5%AF%BC%E5%87%BA)
+  * [多说评论框](#%E5%A4%9A%E8%AF%B4%E8%AF%84%E8%AE%BA%E6%A1%86)
 - [其他说明](#%E5%85%B6%E4%BB%96%E8%AF%B4%E6%98%8E)
   * [Markdown 文件解析](#markdown-%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90)
   * [Markdown 样式](#markdown-%E6%A0%B7%E5%BC%8F)
   * [本地图片](#%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87)
   * [目录](#%E7%9B%AE%E5%BD%95)
   * [缓存](#%E7%BC%93%E5%AD%98)
-
 <!-- tocstop -->
 
 ## 功能
@@ -55,7 +55,7 @@ $$
 ```
 关于Mathjax 语法，请参考[MathJax basic tutorial and quick reference](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference/5044)
 
-不过直接使用原生的 Mathjax 语法，marked 会将公式中的 `\\` 转为 `\`，导致换行失效，为了解决这个问题，这里做了一下扩展，将 Mathjax 代码放入代码块中，代码块语言设为 `mathjax` 即。如下面的示例
+不过直接使用原生的 Mathjax 语法，marked 会将公式中的 `\\` 转为 `\`，导致换行失效，为了解决这个问题，这里做了一下扩展，将 Mathjax 代码放入代码块中，代码块语言设为 `mathjax` 即可。如下面的示例
 
 <pre lang="no-highlight"><code>```mathjax
 $$
@@ -119,6 +119,20 @@ $(".diagram").sequenceDiagram({theme: 'simple'});
 ```
 
 如果不需要某个扩展功能，可以停用该功能，以加快文件渲染的速度。
+
+## 导出
+### 多说评论框
+通过在 Markdown 文件中添加下面代码来配置多说
+
+<pre lang="no-highlight"><code>```duoshuo
+{
+    "key": "<filename>",
+    "title": "<filename>",
+    "url": "<filename>.html",
+    "short_name": "shortname"
+}
+```
+</code></pre>
 
 ## 其他说明
 

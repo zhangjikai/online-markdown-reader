@@ -313,3 +313,7 @@ strong {
     max-width: 100%;
     overflow: auto;
 }
+
+#ds-thread {
+    margin-top: 2em;
+}
