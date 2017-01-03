@@ -43,7 +43,31 @@ Markdown 在线阅读器。
 ```
 
 ### Mathjax
-支持原生的 Mathjax 语法。关于Mathjax 语法，请参考[MathJax basic tutorial and quick reference](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference/5044)
+支持原生的 Mathjax 语法。示例代码：
+```
+$$
+        \begin{matrix}
+        1 & x & x^2 \\
+        1 & y & y^2 \\
+        1 & z & z^2 \\
+        \end{matrix}
+$$
+```
+关于Mathjax 语法，请参考[MathJax basic tutorial and quick reference](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference/5044)
+
+不过直接使用原生的 Mathjax 语法，marked 会将公式中的 `\\` 转为 `\`，导致换行失效，为了解决这个问题，这里做了一下扩展，将 Mathjax 代码放入代码块中，代码块语言设为 `mathjax` 即。如下面的示例
+
+<pre lang="no-highlight"><code>```mathjax
+$$
+        \begin{matrix}
+        1 & x & x^2 \\
+        1 & y & y^2 \\
+        1 & z & z^2 \\
+        \end{matrix}
+$$
+```
+</code></pre>
+
 
 ### 时序图
 在Markdown 文档中添加下面的代码块，会将代码块中的代码解析为时序图
@@ -110,7 +134,7 @@ $(".diagram").sequenceDiagram({theme: 'simple'});
 ### 目录
 在需要生成目录的地方加上下面的代码
 ```
-
+<!-- toc -->
 ```
 如果不加会自动在开头生成。
 

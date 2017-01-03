@@ -75,12 +75,38 @@
 
     var originalCodeFun = renderer.code;
     renderer.code = function (code, language) {
-        if (language == "seq") {
-            return "<div class='diagram' id='diagram'>" + code + "</div>"
-        } else {
-            return originalCodeFun.call(this, code, language);
+
+        switch (language) {
+            case "seq":
+                return "<div class='diagram' id='diagram'>" + code + "</div>"
+            case "mathjax":
+                return "<p>" + code + "</p>\n";
+            default :
+                return originalCodeFun.call(this, code, language);
         }
+        //if (language == "seq") {
+        //    return "<div class='diagram' id='diagram'>" + code + "</div>"
+        //} else {
+        //    return originalCodeFun.call(this, code, language);
+        //}
     };
+
+    //console.log(marked.InlineLexer.rules);
+    /*marked.InlineLexer.rules.escape = /^\\([`*{}\[\]()# +\-.!_>])/;
+     marked.InlineLexer = null;*/
+
+
+    /*var originalParagraph = renderer.paragraph;
+
+     renderer.paragraph = function (text) {
+     if (text.indexOf("$$") != -1 || text.indexOf("\\begin") != 1 ) {
+     console.log(111);
+     console.log(text);
+     return "<p>" + text + "</p>";
+     } else {
+     return originalParagraph.call(this, text);
+     }
+     }*/
 
     marked.setOptions({
         renderer: renderer
@@ -101,7 +127,6 @@
 
         reader.onload = function (e) {
             document.getElementById("content").innerHTML = marked(e.target.result);
-
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
         }
     }
@@ -186,6 +211,12 @@
         }
 
         if (Setting.mathjax) {
+
+            if(MathJax.Extension["TeX/AMSmath"] != null) {
+                MathJax.Extension["TeX/AMSmath"].startNumber = 0;
+                MathJax.Extension["TeX/AMSmath"].labels = {};
+            }
+
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
         }
 

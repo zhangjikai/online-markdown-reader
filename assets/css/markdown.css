@@ -308,3 +308,8 @@ table td:first-child, table th:first-child {
 strong {
     margin: 3px;
 }
+
+.diagram {
+    max-width: 100%;
+    overflow: auto;
+}
