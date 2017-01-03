@@ -19,13 +19,23 @@
     var hasTocTag = false;
     var minLevel = 5;
 
+    var dsConfig = {
+        "key": "test",
+        "title": "test",
+        "url": "test.html",
+        "short_name": "zhangjkblog"
+    };
+    var hasDsConfig = false;
+
     var Constants = {
         highlight: "highlight",
         prism: "prism",
         mdName: "mdName",
         mdContent: "mdContent",
         tocTag: "<!-- toc -->",
-        setting: "setting"
+        setting: "setting",
+        DHShort: "duoshuoShort"
+
     };
 
     var Setting = {
@@ -37,7 +47,9 @@
         mathjax: true,
         sd: true,
         emoji: true,
-        backtop: true
+        backtop: true,
+        duoshuo: true
+
     };
 
     var renderer = new marked.Renderer();
@@ -75,12 +87,35 @@
 
     var originalCodeFun = renderer.code;
     renderer.code = function (code, language) {
-        if (language == "seq") {
-            return "<div class='diagram' id='diagram'>" + code + "</div>"
-        } else {
-            return originalCodeFun.call(this, code, language);
+
+        switch (language) {
+            case "seq":
+                return "<div class='diagram' id='diagram'>" + code + "</div>"
+            case "mathjax":
+                return "<p>" + code + "</p>\n";
+            case "duoshuo":
+                loadDuoshuoConfig(code);
+                return "";
+            default :
+                return originalCodeFun.call(this, code, language);
         }
     };
+
+
+    function loadDuoshuoConfig(text) {
+        var config = JSON.parse(text);
+        for (var key in config) {
+            var newValue = config[key];
+            if (newValue === undefined) {
+                console.warn('\'' + key + '\' parameter is undefined.');
+                continue;
+            }
+            if (key in dsConfig) {
+                dsConfig[key] = newValue;
+            }
+        }
+        localStorage.setItem(Constants.DHShort, dsConfig.short_name);
+    }
 
     marked.setOptions({
         renderer: renderer
@@ -101,7 +136,6 @@
 
         reader.onload = function (e) {
             document.getElementById("content").innerHTML = marked(e.target.result);
-
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
         }
     }
@@ -159,6 +193,7 @@
             } else {
                 removeCacheFile();
             }
+
             processMdContent(mdContent);
         };
 
@@ -168,6 +203,7 @@
         toc.length = 0;
         tocStr = "";
         calTocStart(content);
+        setDsConfig(mdName);
         $("#content").html(marked(content));
 
         replaceImage();
@@ -186,6 +222,12 @@
         }
 
         if (Setting.mathjax) {
+
+            if (MathJax.Extension["TeX/AMSmath"] != null) {
+                MathJax.Extension["TeX/AMSmath"].startNumber = 0;
+                MathJax.Extension["TeX/AMSmath"].labels = {};
+            }
+
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
         }
 
@@ -195,6 +237,10 @@
 
         if (Setting.sd) {
             $(".diagram").sequenceDiagram({theme: 'simple'});
+        }
+
+        if (Setting.duoshuo) {
+            $("#content").html();
         }
 
         $("#loader").css("display", "none");
@@ -220,6 +266,12 @@
         }
         localStorage.setItem(Constants.mdName, name);
         localStorage.setItem(Constants.mdContent, content);
+    }
+
+    function setDsConfig(name) {
+        dsConfig.key = name;
+        dsConfig.title = name;
+        dsConfig.url = name + ".html";
     }
 
     function removeCacheFile() {
@@ -455,6 +507,14 @@
                 Setting[key] = newValue;
             }
         }
+
+        /*if (tmpSetting.hasOwnProperty(Constants.DHShort)) {
+         dsConfig.short_name = tmpSetting[Constants.DHShort];
+         }*/
+        var sname = localStorage.getItem(Constants.DHShort);
+        if (sname != null) {
+            dsConfig.short_name = sname;
+        }
     }
 
     function saveSetting() {
@@ -620,7 +680,11 @@
 
         if (Setting.mathjax) {
             jsContent += '<script type="text/x-mathjax-config">' +
-                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});" +
+                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, " +
+                'TeX: {equationNumbers: {autoNumber: ["AMS"],useLabelIds: true}},' +
+                '"HTML-CSS": {linebreaks: {automatic: true}},' +
+                'SVG: {linebreaks: {automatic: true}}' +
+                "});" +
                 "</script>" +
                 '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
         }
@@ -631,6 +695,14 @@
             jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
             jsContent += '<script type="text/javascript" src="http://markdown.zhangjikai.com/dist/js/backtotop.min.js"></script>';
             jsContent += '<script type="text/javascript">backToTop.init()</script> '
+        }
+
+        if (Setting.duoshuo) {
+            jsContent += '<div class="ds-thread" data-thread-key="' +dsConfig.key +
+                '" data-title="' + dsConfig.title +
+                '" data-url="' + dsConfig.url  +
+                '"></div><script type="text/javascript">var duoshuoQuery = {short_name:"' + dsConfig.short_name +
+                '"};(function() {var ds = document.createElement("script");ds.type = "text/javascript";ds.async = true;ds.src = (document.location.protocol == "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";ds.charset = "UTF-8";(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ds);})();</script>';
         }
 
         var htmlContent = '<!DOCTYPE html>' +

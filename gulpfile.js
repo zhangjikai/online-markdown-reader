@@ -84,6 +84,11 @@ gulp.task('minify-css', function() {
         .pipe(gulp.dest('dist/css'));
 });
 
+gulp.task('copy-css', function() {
+    return gulp.src('assets/css/*.css')
+        .pipe(gulp.dest('dist/css'));
+});
+
 gulp.task('minify-js', function() {
     gulp.src('src/js/*.js')
         .pipe(minifyJs({
@@ -97,7 +102,7 @@ gulp.task('minify-js', function() {
         .pipe(gulp.dest('dist/js'))
 });
 
-gulp.task("compress", ['minify-css', 'minify-js']);
+gulp.task("compress", ['minify-css', 'copy-css', 'minify-js']);
 
 gulp.task("watch", function () {
     gulp.watch("src/**/*.less", ["less"]);
