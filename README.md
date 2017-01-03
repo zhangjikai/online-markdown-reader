@@ -9,6 +9,8 @@ Markdown 在线阅读器。
   * [Todo列表](#todo%E5%88%97%E8%A1%A8)
   * [Mathjax](#mathjax)
   * [时序图](#%E6%97%B6%E5%BA%8F%E5%9B%BE)
+  * [Emoji](#Emoji)
+  * [自定义扩展](#自定义扩展)
 - [其他说明](#%E5%85%B6%E4%BB%96%E8%AF%B4%E6%98%8E)
   * [Markdown 文件解析](#markdown-%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90)
   * [Markdown 样式](#markdown-%E6%A0%B7%E5%BC%8F)
@@ -108,7 +110,7 @@ $(".diagram").sequenceDiagram({theme: 'simple'});
 ### 目录
 在需要生成目录的地方加上下面的代码
 ```
-<!-- toc -->
+
 ```
 如果不加会自动在开头生成。
 
