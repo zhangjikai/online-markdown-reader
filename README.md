@@ -8,6 +8,7 @@ Markdown 在线阅读器。
 - [扩展语法](#%E6%89%A9%E5%B1%95%E8%AF%AD%E6%B3%95)
   * [Todo列表](#todo%E5%88%97%E8%A1%A8)
   * [Mathjax](#mathjax)
+  * [时序图](#时序图)
   * [Emoji](#emoji)
   * [自定义扩展](#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95)
 - [导出](#%E5%AF%BC%E5%87%BA)
@@ -26,6 +27,8 @@ Markdown 在线阅读器。
 + 自动生成目录
 + 本地图片显示
 + 导出 Html （包含样式）
+    - BackToTop
+    - 多说
 + 扩展功能
     - Toto 列表
     - [MathJax](https://github.com/mathjax/MathJax) 
@@ -73,7 +76,10 @@ $$
 在Markdown 文档中添加下面的代码块，会将代码块中的代码解析为时序图
 
 <pre lang="no-highlight"><code>```seq
-时序图代码
+A->B: Normal line
+B-->C: Dashed line
+C->>D: Open arrow
+D-->>A: Dashed open arrow
 ```
 </code></pre>
 
@@ -126,9 +132,9 @@ $(".diagram").sequenceDiagram({theme: 'simple'});
 
 <pre lang="no-highlight"><code>```duoshuo
 {
-    "key": "<filename>",
-    "title": "<filename>",
-    "url": "<filename>.html",
+    "key": "filename",
+    "title": "filename",
+    "url": "filename.html",
     "short_name": "shortname"
 }
 ```

@@ -151,6 +151,26 @@ $$I = \int \rho R^{2} dV$$
 And note that you can backslash-escape any punctuation characters
 which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
 
+```mathjax
+$$
+        \begin{matrix}
+        1 & x & x^2 \\
+        1 & y & y^2 \\
+        1 & z & z^2 \\
+        \end{matrix}
+$$
+```
+
+```mathjax
+\begin{align}
+\sqrt{37} & = \sqrt{\frac{73^2-1}{12^2}} \\
+ & = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\ 
+ & = \sqrt{\frac{73^2}{12^2}}\sqrt{\frac{73^2-1}{73^2}} \\
+ & = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\ 
+ & \approx \frac{73}{12}\left(1 - \frac{1}{2\cdot73^2}\right)
+\end{align}
+```
+
 ## Todo
 - [x] 完成
 - [ ] 未完成
@@ -175,3 +195,12 @@ D-->>A: Dashed open arrow
 
 ## Emoji
 :bowtie: :smile:  :smiley: :blush: :kissing_smiling_eyes:
+
+```duoshuo
+{
+    "key": "sample",
+    "title": "Markdown Sample",
+    "url": "/markdown/sample.html",
+    "short_name": "zhangjkblog"
+}
+```
