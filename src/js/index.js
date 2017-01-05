@@ -11,6 +11,9 @@
     var mdContent = "";
     var maxSize = 1024 * 1024 * 4;
 
+    var echartData = [];
+    var echartIndex = 0;
+
     var toc = [];
     var tocDumpIndex = 0;
     var tocStr = "";
@@ -48,9 +51,10 @@
         sd: true,
         emoji: true,
         backtop: true,
-        duoshuo: true
-
+        duoshuo: true,
+        echarts: true
     };
+
 
     var renderer = new marked.Renderer();
 
@@ -96,6 +100,8 @@
             case "duoshuo":
                 loadDuoshuoConfig(code);
                 return "";
+            case "echarts":
+                return loadEcharts(code);
             default :
                 return originalCodeFun.call(this, code, language);
         }
@@ -115,6 +121,38 @@
             }
         }
         localStorage.setItem(Constants.DHShort, dsConfig.short_name);
+    }
+
+    function loadEcharts(text) {
+        var width = "100%";
+        var height = "400px";
+
+        try {
+            //var options = JSON.parse("'" + text + "'");
+            //text = text.replace(/'/g, '"');
+            //console.log(text);
+            //var options =  $.parseJSON(text);
+            var options = eval("(" + text + ")");
+            console.log(options);
+        } catch (e) {
+            console.log(e);
+            return "";
+        }
+
+        if (options.hasOwnProperty("width")) {
+            width = options["width"];
+        }
+
+        if (options.hasOwnProperty("height")) {
+            height = options["height"];
+        }
+        echartIndex++;
+        echartData.push({
+            id: echartIndex,
+            option: options
+        });
+
+        return '<div id="echarts-' + echartIndex + '" style="width: ' + width + ';height:' + height + ';"></div>'
     }
 
     marked.setOptions({
@@ -199,9 +237,16 @@
 
     }
 
-    function processMdContent(content) {
+
+    function resetBeforeProcess() {
         toc.length = 0;
         tocStr = "";
+        echartIndex = 0;
+        echartData.length = 0;
+    }
+
+    function processMdContent(content) {
+        resetBeforeProcess();
         calTocStart(content);
         setDsConfig(mdName);
         $("#content").html(marked(content));
@@ -239,8 +284,20 @@
             $(".diagram").sequenceDiagram({theme: 'simple'});
         }
 
-        if (Setting.duoshuo) {
-            $("#content").html();
+        /*if (Setting.duoshuo) {
+         $("#content").html();
+         }*/
+
+        if (Setting.echarts) {
+
+            var chart;
+            echartData.forEach(function (data) {
+                /*console.log(data);*/
+                console.log(document.getElementById('echarts-' + data.id))
+                chart = echarts.init(document.getElementById('echarts-' + data.id));
+
+                chart.setOption(data.option);
+            });
         }
 
         $("#loader").css("display", "none");
@@ -698,9 +755,9 @@
         }
 
         if (Setting.duoshuo) {
-            jsContent += '<div class="ds-thread" data-thread-key="' +dsConfig.key +
+            jsContent += '<div class="ds-thread" data-thread-key="' + dsConfig.key +
                 '" data-title="' + dsConfig.title +
-                '" data-url="' + dsConfig.url  +
+                '" data-url="' + dsConfig.url +
                 '"></div><script type="text/javascript">var duoshuoQuery = {short_name:"' + dsConfig.short_name +
                 '"};(function() {var ds = document.createElement("script");ds.type = "text/javascript";ds.async = true;ds.src = (document.location.protocol == "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";ds.charset = "UTF-8";(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ds);})();</script>';
         }

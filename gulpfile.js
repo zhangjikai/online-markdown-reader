@@ -30,6 +30,8 @@ gulp.task("move", function () {
             './bower_components/js-sequence-diagrams/dist/**/*sequence-diagram*css',
             './bower_components/js-sequence-diagrams/dist/**/*sequence-diagram*map',
             './bower_components/magic-check/**/*magic-check*css',
+            './bower_components/echarts/dist/**/*js',
+
 
         ],
         {
