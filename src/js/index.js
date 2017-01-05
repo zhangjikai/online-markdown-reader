@@ -63,9 +63,6 @@
         echarts: false
     };
 
-
-
-
     var renderer = new marked.Renderer();
 
     /* Todo列表 */
@@ -104,22 +101,22 @@
 
         switch (language) {
             case "seq":
-                if(Setting.sd ) {
+                if (Setting.sd) {
                     return "<div class='diagram' id='diagram'>" + code + "</div>"
                 }
                 return originalCodeFun.call(this, code, language);
             case "mathjax":
-                if(Setting.mathjax || exportSetting.mathjax) {
+                if (Setting.mathjax || exportSetting.mathjax) {
                     return "<p>" + code + "</p>\n";
                 }
                 return originalCodeFun.call(this, code, language);
             case "duoshuo":
-                if(Setting.duoshuo ) {
+                if (Setting.duoshuo) {
                     loadDuoshuoConfig(code);
                 }
                 return "";
             case "echarts":
-                if(Setting.echarts || exportSetting.echarts) {
+                if (Setting.echarts || exportSetting.echarts) {
                     return loadEcharts(code);
                 }
                 return originalCodeFun.call(this, code, language);
@@ -130,18 +127,23 @@
 
 
     function loadDuoshuoConfig(text) {
-        var config = JSON.parse(text);
-        for (var key in config) {
-            var newValue = config[key];
-            if (newValue === undefined) {
-                console.warn('\'' + key + '\' parameter is undefined.');
-                continue;
+        try {
+            var config = JSON.parse(text);
+            for (var key in config) {
+                var newValue = config[key];
+                if (newValue === undefined) {
+                    console.warn('\'' + key + '\' parameter is undefined.');
+                    continue;
+                }
+                if (key in dsConfig) {
+                    dsConfig[key] = newValue;
+                }
             }
-            if (key in dsConfig) {
-                dsConfig[key] = newValue;
-            }
+            localStorage.setItem(Constants.DHShort, dsConfig.short_name);
+        } catch (e) {
+            sweetAlert("出错了", "解析 多说 配置出现错误，请检查语法", "error");
+            console.log(e);
         }
-        localStorage.setItem(Constants.DHShort, dsConfig.short_name);
     }
 
     function loadEcharts(text) {
@@ -149,34 +151,30 @@
         var height = "400px";
 
         try {
-            //var options = JSON.parse("'" + text + "'");
-            //text = text.replace(/'/g, '"');
-            //console.log(text);
-            //var options =  $.parseJSON(text);
             var options = eval("(" + text + ")");
-            //console.log(options);
-        } catch (e) {
-            console.log("处理 echarts 出现问题");
-            console.log(e);
 
+            if (options.hasOwnProperty("width")) {
+                width = options["width"];
+            }
+
+            if (options.hasOwnProperty("height")) {
+                height = options["height"];
+            }
+
+            echartIndex++;
+            echartData.push({
+                id: echartIndex,
+                option: options,
+                previousOption: text
+            });
+
+            return '<div id="echarts-' + echartIndex + '" style="width: ' + width + ';height:' + height + ';"></div>'
+        } catch (e) {
+
+            sweetAlert("出错了", "解析 ECharts 配置出现错误，请检查语法", "error");
+            console.log(e);
             return "";
         }
-
-        if (options.hasOwnProperty("width")) {
-            width = options["width"];
-        }
-
-        if (options.hasOwnProperty("height")) {
-            height = options["height"];
-        }
-        echartIndex++;
-        echartData.push({
-            id: echartIndex,
-            option: options,
-            previousOption: text
-        });
-
-        return '<div id="echarts-' + echartIndex + '" style="width: ' + width + ';height:' + height + ';"></div>'
     }
 
     marked.setOptions({
@@ -270,65 +268,61 @@
     }
 
     function processMdContent(content) {
-        resetBeforeProcess();
-        calTocStart(content);
-        setDsConfig(mdName);
-        $("#content").html(marked(content));
 
-        replaceImage();
+        try {
+            resetBeforeProcess();
+            calTocStart(content);
+            setDsConfig(mdName);
+            $("#content").html(marked(content));
 
-        if (Setting.genToc) {
-            genToc();
-        }
+            replaceImage();
 
-        if (Setting.highlight == Constants.highlight) {
-            $('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
-        } else {
-            $("pre").addClass("line-numbers");
-            Prism.highlightAll();
-        }
-
-        if (Setting.mathjax) {
-
-            if (MathJax.Extension["TeX/AMSmath"] != null) {
-                MathJax.Extension["TeX/AMSmath"].startNumber = 0;
-                MathJax.Extension["TeX/AMSmath"].labels = {};
+            if (Setting.genToc) {
+                genToc();
             }
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
-        }
+            if (Setting.highlight == Constants.highlight) {
+                $('pre code').each(function (i, block) {
+                    hljs.highlightBlock(block);
+                });
+            } else {
+                $("pre").addClass("line-numbers");
+                Prism.highlightAll();
+            }
 
-        if (Setting.emoji) {
-            emojify.run(document.getElementById('content'))
-        }
+            if (Setting.mathjax) {
 
-        if (Setting.sd) {
-            $(".diagram").sequenceDiagram({theme: 'simple'});
-        }
-
-        /*if (Setting.duoshuo) {
-         $("#content").html();
-         }*/
-
-        if (Setting.echarts) {
-
-            var chart;
-            echartData.forEach(function (data) {
-                /*console.log(data);*/
-                //console.log(document.getElementById('echarts-' + data.id))
-
-                if(data.option.theme) {
-                    chart = echarts.init(document.getElementById('echarts-' + data.id), data.option.theme);
-                } else {
-                    chart = echarts.init(document.getElementById('echarts-' + data.id));
+                if (MathJax.Extension["TeX/AMSmath"] != null) {
+                    MathJax.Extension["TeX/AMSmath"].startNumber = 0;
+                    MathJax.Extension["TeX/AMSmath"].labels = {};
                 }
 
-                chart.setOption(data.option);
-                //console.log(JSON.stringify(data.option));
-            });
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "content"]);
+            }
+
+            if (Setting.emoji) {
+                emojify.run(document.getElementById('content'))
+            }
+
+            if (Setting.sd) {
+                $(".diagram").sequenceDiagram({theme: 'simple'});
+            }
+
+            if (Setting.echarts) {
+                var chart;
+                echartData.forEach(function (data) {
+                    if (data.option.theme) {
+                        chart = echarts.init(document.getElementById('echarts-' + data.id), data.option.theme);
+                    } else {
+                        chart = echarts.init(document.getElementById('echarts-' + data.id));
+                    }
+                    chart.setOption(data.option);
+                });
+            }
+        } catch(e) {
+            sweetAlert("出错了", "处理文件出现错误，请检查语法", "error");
         }
+
 
         $("#loader").css("display", "none");
 
@@ -341,6 +335,12 @@
         } else {
             processMdFile(targetFile);
         }
+    }
+
+    function clear() {
+        localStorage.removeItem(Constants.mdName);
+        localStorage.removeItem(Constants.mdContent);
+        window.location.reload();
     }
 
     function saveMdFile(name, content) {
@@ -595,9 +595,6 @@
             }
         }
 
-        /*if (tmpSetting.hasOwnProperty(Constants.DHShort)) {
-         dsConfig.short_name = tmpSetting[Constants.DHShort];
-         }*/
         var sname = localStorage.getItem(Constants.DHShort);
         if (sname != null) {
             dsConfig.short_name = sname;
@@ -669,8 +666,6 @@
     }
 
     function exportHtml() {
-        /*var htmlContent = localStorage.getItem("file");
-         htmlContent = marked(htmlContent);*/
 
         var htmlContent = "";
 
@@ -689,23 +684,15 @@
             styleContent += '<link href="http://cdn.bootcss.com/emojify.js/1.1.0/css/basic/emojify.min.css" rel="stylesheet">';
         }
 
-
-        /*if (Setting.mathjax) {
-            Setting.mathjax = false;
-
-            Setting.mathjax = true;
-            processMdContent(mdContent);
-        }*/
-
         var preMajax = Setting.mathjax;
         var preEcharts = Setting.echarts;
 
-        if(preMajax) {
+        if (preMajax) {
             Setting.mathjax = false;
             exportSetting.mathjax = true;
         }
 
-        if(preEcharts) {
+        if (preEcharts) {
             Setting.echarts = false;
             exportSetting.echarts = true;
         }
@@ -747,17 +734,17 @@
                 '"};(function() {var ds = document.createElement("script");ds.type = "text/javascript";ds.async = true;ds.src = (document.location.protocol == "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";ds.charset = "UTF-8";(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ds);})();</script>';
         }
 
-        if(Setting.echarts) {
+        if (Setting.echarts) {
 
             jsContent += '<br />';
             jsContent += '<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.min.js"></script>';
-            echartData.forEach(function(data) {
+            echartData.forEach(function (data) {
                 var themeObj = {};
 
-                if(data.option.theme) {
-                    if(!themeObj.hasOwnProperty(data.option.theme)) {
-                        if(echartThemeText.indexOf(data.option.theme) != -1) {
-                            jsContent += '<script src="http://markdown.zhangjikai.com/dist/js/echarts-theme/'+data.option.theme+'.min.js"></script>';
+                if (data.option.theme) {
+                    if (!themeObj.hasOwnProperty(data.option.theme)) {
+                        if (echartThemeText.indexOf(data.option.theme) != -1) {
+                            jsContent += '<script src="http://markdown.zhangjikai.com/dist/js/echarts-theme/' + data.option.theme + '.min.js"></script>';
                         }
                         themeObj[data.option.theme] = "theme";
                     }
@@ -767,14 +754,14 @@
             jsContent += '<br />';
 
             jsContent += '<script type="text/javascript"> ';
-            echartData.forEach(function(data, index) {
+            echartData.forEach(function (data, index) {
                 var theme = "";
 
-                if(data.option.theme) {
+                if (data.option.theme) {
 
                     theme = data.option.theme;
                 }
-                jsContent += 'var chart' + index + ' = echarts.init(document.getElementById("echarts-' + data.id + '"),"'+ theme+'");\n' +
+                jsContent += 'var chart' + index + ' = echarts.init(document.getElementById("echarts-' + data.id + '"),"' + theme + '");\n' +
                     'var option' + index + ' = ' + data.previousOption + ';\n' +
                     'chart' + index + '.setOption(option' + index + ');\n';
             });
@@ -801,8 +788,7 @@
             '</html>';
 
         var name = mdName + ".html";
-        if(Setting.format) {
-            console.log(222);
+        if (Setting.format) {
             htmlContent = html_beautify(htmlContent, {indent_size: 4});
         }
         //var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
@@ -879,6 +865,8 @@
     $("#refresh").click(function () {
         refresh();
     });
+
+    $("#clear").click(clear);
 
     emojify.setConfig({
         emojify_tag_type: 'div',           // Only run emojify.js on this element
