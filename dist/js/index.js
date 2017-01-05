@@ -11,6 +11,10 @@
     var mdContent = "";
     var maxSize = 1024 * 1024 * 4;
 
+    var echartData = [];
+    var echartIndex = 0;
+    var echartThemeText = "darki infographic macarons roma shine vintage";
+
     var toc = [];
     var tocDumpIndex = 0;
     var tocStr = "";
@@ -26,6 +30,7 @@
         "short_name": "zhangjkblog"
     };
     var hasDsConfig = false;
+
 
     var Constants = {
         highlight: "highlight",
@@ -48,9 +53,18 @@
         sd: true,
         emoji: true,
         backtop: true,
-        duoshuo: true
-
+        duoshuo: true,
+        echarts: true,
+        format: true
     };
+
+    var exportSetting = {
+        mathjax: false,
+        echarts: false
+    };
+
+
+
 
     var renderer = new marked.Renderer();
 
@@ -90,12 +104,25 @@
 
         switch (language) {
             case "seq":
-                return "<div class='diagram' id='diagram'>" + code + "</div>"
+                if(Setting.sd ) {
+                    return "<div class='diagram' id='diagram'>" + code + "</div>"
+                }
+                return originalCodeFun.call(this, code, language);
             case "mathjax":
-                return "<p>" + code + "</p>\n";
+                if(Setting.mathjax || exportSetting.mathjax) {
+                    return "<p>" + code + "</p>\n";
+                }
+                return originalCodeFun.call(this, code, language);
             case "duoshuo":
-                loadDuoshuoConfig(code);
+                if(Setting.duoshuo ) {
+                    loadDuoshuoConfig(code);
+                }
                 return "";
+            case "echarts":
+                if(Setting.echarts || exportSetting.echarts) {
+                    return loadEcharts(code);
+                }
+                return originalCodeFun.call(this, code, language);
             default :
                 return originalCodeFun.call(this, code, language);
         }
@@ -115,6 +142,41 @@
             }
         }
         localStorage.setItem(Constants.DHShort, dsConfig.short_name);
+    }
+
+    function loadEcharts(text) {
+        var width = "100%";
+        var height = "400px";
+
+        try {
+            //var options = JSON.parse("'" + text + "'");
+            //text = text.replace(/'/g, '"');
+            //console.log(text);
+            //var options =  $.parseJSON(text);
+            var options = eval("(" + text + ")");
+            //console.log(options);
+        } catch (e) {
+            console.log("处理 echarts 出现问题");
+            console.log(e);
+
+            return "";
+        }
+
+        if (options.hasOwnProperty("width")) {
+            width = options["width"];
+        }
+
+        if (options.hasOwnProperty("height")) {
+            height = options["height"];
+        }
+        echartIndex++;
+        echartData.push({
+            id: echartIndex,
+            option: options,
+            previousOption: text
+        });
+
+        return '<div id="echarts-' + echartIndex + '" style="width: ' + width + ';height:' + height + ';"></div>'
     }
 
     marked.setOptions({
@@ -199,9 +261,16 @@
 
     }
 
-    function processMdContent(content) {
+
+    function resetBeforeProcess() {
         toc.length = 0;
         tocStr = "";
+        echartIndex = 0;
+        echartData.length = 0;
+    }
+
+    function processMdContent(content) {
+        resetBeforeProcess();
         calTocStart(content);
         setDsConfig(mdName);
         $("#content").html(marked(content));
@@ -239,8 +308,26 @@
             $(".diagram").sequenceDiagram({theme: 'simple'});
         }
 
-        if (Setting.duoshuo) {
-            $("#content").html();
+        /*if (Setting.duoshuo) {
+         $("#content").html();
+         }*/
+
+        if (Setting.echarts) {
+
+            var chart;
+            echartData.forEach(function (data) {
+                /*console.log(data);*/
+                //console.log(document.getElementById('echarts-' + data.id))
+
+                if(data.option.theme) {
+                    chart = echarts.init(document.getElementById('echarts-' + data.id), data.option.theme);
+                } else {
+                    chart = echarts.init(document.getElementById('echarts-' + data.id));
+                }
+
+                chart.setOption(data.option);
+                //console.log(JSON.stringify(data.option));
+            });
         }
 
         $("#loader").css("display", "none");
@@ -485,7 +572,7 @@
         }
 
         mdName = localStorage.getItem(Constants.mdName);
-        console.log(mdName);
+        //console.log(mdName);
         mdContent = file;
         processMdContent(mdContent);
         $("#loader").css("display", "none");
@@ -581,6 +668,148 @@
 
     }
 
+    function exportHtml() {
+        /*var htmlContent = localStorage.getItem("file");
+         htmlContent = marked(htmlContent);*/
+
+        var htmlContent = "";
+
+
+        var styleContent = "";
+        var jsContent = "";
+
+        if (Setting.highlight == Constants.highlight) {
+            styleContent += '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">';
+        } else {
+            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">'
+            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">';
+        }
+
+        if (Setting.emoji) {
+            styleContent += '<link href="http://cdn.bootcss.com/emojify.js/1.1.0/css/basic/emojify.min.css" rel="stylesheet">';
+        }
+
+
+        /*if (Setting.mathjax) {
+            Setting.mathjax = false;
+
+            Setting.mathjax = true;
+            processMdContent(mdContent);
+        }*/
+
+        var preMajax = Setting.mathjax;
+        var preEcharts = Setting.echarts;
+
+        if(preMajax) {
+            Setting.mathjax = false;
+            exportSetting.mathjax = true;
+        }
+
+        if(preEcharts) {
+            Setting.echarts = false;
+            exportSetting.echarts = true;
+        }
+
+        processMdContent(mdContent);
+        htmlContent = $("#content").html();
+
+        Setting.mathjax = preMajax;
+        Setting.echarts = preEcharts;
+        exportSetting.mathjax = false;
+        exportSetting.echarts = false;
+
+        processMdContent(mdContent);
+
+        if (Setting.mathjax) {
+            jsContent += '<script type="text/x-mathjax-config">' +
+                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, " +
+                'TeX: {equationNumbers: {autoNumber: ["AMS"],useLabelIds: true}},' +
+                '"HTML-CSS": {linebreaks: {automatic: true}},' +
+                'SVG: {linebreaks: {automatic: true}}' +
+                "});" +
+                "</script>" +
+                '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+        }
+
+        if (Setting.backtop) {
+            styleContent += '<link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">';
+            styleContent += ' <link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/backtotop.min.css">';
+            jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
+            jsContent += '<script type="text/javascript" src="http://markdown.zhangjikai.com/dist/js/backtotop.min.js"></script>';
+            jsContent += '<script type="text/javascript">backToTop.init()</script> '
+        }
+
+        if (Setting.duoshuo) {
+            jsContent += '<div class="ds-thread" data-thread-key="' + dsConfig.key +
+                '" data-title="' + dsConfig.title +
+                '" data-url="' + dsConfig.url +
+                '"></div><script type="text/javascript">var duoshuoQuery = {short_name:"' + dsConfig.short_name +
+                '"};(function() {var ds = document.createElement("script");ds.type = "text/javascript";ds.async = true;ds.src = (document.location.protocol == "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";ds.charset = "UTF-8";(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ds);})();</script>';
+        }
+
+        if(Setting.echarts) {
+
+            jsContent += '<br />';
+            jsContent += '<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.min.js"></script>';
+            echartData.forEach(function(data) {
+                var themeObj = {};
+
+                if(data.option.theme) {
+                    if(!themeObj.hasOwnProperty(data.option.theme)) {
+                        if(echartThemeText.indexOf(data.option.theme) != -1) {
+                            jsContent += '<script src="http://markdown.zhangjikai.com/dist/js/echarts-theme/'+data.option.theme+'.min.js"></script>';
+                        }
+                        themeObj[data.option.theme] = "theme";
+                    }
+
+                }
+            });
+            jsContent += '<br />';
+
+            jsContent += '<script type="text/javascript"> ';
+            echartData.forEach(function(data, index) {
+                var theme = "";
+
+                if(data.option.theme) {
+
+                    theme = data.option.theme;
+                }
+                jsContent += 'var chart' + index + ' = echarts.init(document.getElementById("echarts-' + data.id + '"),"'+ theme+'");\n' +
+                    'var option' + index + ' = ' + data.previousOption + ';\n' +
+                    'chart' + index + '.setOption(option' + index + ');\n';
+            });
+            jsContent += "</script>"
+
+
+        }
+
+        var htmlContent = '<!DOCTYPE html>' +
+            '<html>' +
+            '<head>' +
+            '<meta charset="UTF-8">' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+            '<title>' +
+            mdName +
+            '</title>' +
+            styleContent +
+            '<link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/markdown.min.css">' +
+            '</head>' +
+            '<body>' +
+            htmlContent +
+            jsContent +
+            '</body>' +
+            '</html>';
+
+        var name = mdName + ".html";
+        if(Setting.format) {
+            console.log(222);
+            htmlContent = html_beautify(htmlContent, {indent_size: 4});
+        }
+        //var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
+        var blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+        saveAs(blob, name);
+    }
+
     function collapseUpload() {
         $("#fold").removeClass("fa-minus-square");
         $("#fold").addClass("fa-plus-square");
@@ -644,88 +873,7 @@
         }
     });
 
-    $("#export").click(function () {
-
-        /*var htmlContent = localStorage.getItem("file");
-         htmlContent = marked(htmlContent);*/
-
-        var htmlContent = "";
-
-
-        var styleContent = "";
-        var jsContent = "";
-
-        if (Setting.highlight == Constants.highlight) {
-            styleContent += '<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/atom-one-light.min.css" rel="stylesheet">';
-        } else {
-            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">'
-            styleContent += '<link href="http://cdn.bootcss.com/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">';
-        }
-
-        if (Setting.emoji) {
-            styleContent += '<link href="http://cdn.bootcss.com/emojify.js/1.1.0/css/basic/emojify.min.css" rel="stylesheet">';
-        }
-
-
-        if (Setting.mathjax) {
-            Setting.mathjax = false;
-            processMdContent(mdContent);
-            htmlContent = $("#content").html();
-            Setting.mathjax = true;
-            processMdContent(mdContent);
-        } else {
-            htmlContent = $("#content").html();
-        }
-
-
-        if (Setting.mathjax) {
-            jsContent += '<script type="text/x-mathjax-config">' +
-                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, " +
-                'TeX: {equationNumbers: {autoNumber: ["AMS"],useLabelIds: true}},' +
-                '"HTML-CSS": {linebreaks: {automatic: true}},' +
-                'SVG: {linebreaks: {automatic: true}}' +
-                "});" +
-                "</script>" +
-                '<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
-        }
-
-        if (Setting.backtop) {
-            styleContent += '<link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">';
-            styleContent += ' <link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/backtotop.min.css">';
-            jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
-            jsContent += '<script type="text/javascript" src="http://markdown.zhangjikai.com/dist/js/backtotop.min.js"></script>';
-            jsContent += '<script type="text/javascript">backToTop.init()</script> '
-        }
-
-        if (Setting.duoshuo) {
-            jsContent += '<div class="ds-thread" data-thread-key="' +dsConfig.key +
-                '" data-title="' + dsConfig.title +
-                '" data-url="' + dsConfig.url  +
-                '"></div><script type="text/javascript">var duoshuoQuery = {short_name:"' + dsConfig.short_name +
-                '"};(function() {var ds = document.createElement("script");ds.type = "text/javascript";ds.async = true;ds.src = (document.location.protocol == "https:" ? "https:" : "http:") + "//static.duoshuo.com/embed.js";ds.charset = "UTF-8";(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ds);})();</script>';
-        }
-
-        var htmlContent = '<!DOCTYPE html>' +
-            '<html>' +
-            '<head>' +
-            '<meta charset="UTF-8">' +
-            '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-            '<title>' +
-            mdName +
-            '</title>' +
-            styleContent +
-            '<link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/markdown.min.css">' +
-            '</head>' +
-            '<body>' +
-            htmlContent +
-            jsContent +
-            '</body>' +
-            '</html>';
-
-        var name = mdName + ".html";
-        var blob = new Blob([html_beautify(htmlContent, {indent_size: 4})], {type: "text/html;charset=utf-8"});
-        saveAs(blob, name);
-    });
+    $("#export").click(exportHtml);
 
 
     $("#refresh").click(function () {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Markdown Reader</title>
 
-    <!-- <link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">
+    <!--<link rel="stylesheet" href="assets/lib/highlightjs/styles/github.css">
     <link rel="stylesheet" href="assets/lib/prism/prism.css">
     <link rel="stylesheet" href="assets/lib/font-awesome/css/font-awesome.min.css">
     <link href="assets/lib/remodal/dist/remodal.css" rel="stylesheet">
@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" href="assets/css/markdown.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/lib/loaders.css/loaders.min.css"> -->
+    <link rel="stylesheet" href="assets/lib/loaders.css/loaders.min.css">-->
 
     <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/highlight.js/9.9.0/styles/github.min.css" rel="stylesheet">
@@ -181,15 +181,20 @@
             <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_seq" ref="sd">
             <label for="s_seq">Sequence Diagram</label>
             <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_emoji" ref="emoji">
-            <label for="s_emoji">emoji</label>
+            <label for="s_emoji">Emoji</label>
+
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_echart" ref="echarts">
+            <label for="s_echart">ECharts</label>
         </div>
     </div>
 
     <div class="setting-section">
         <div class="setting-title">
-            <span>导出</span>
+            <span>导出 Html</span>
         </div>
         <div class="setting-content">
+            <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_format" ref="format">
+            <label for="s_format">格式化 Html</label>
             <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_backtop" ref="backtop">
             <label for="s_backtop">添加返回顶部按钮</label>
             <input class="magic-checkbox custom-checkbox" type="checkbox" name="set" id="s_duoshuo" ref="duoshuo">
@@ -226,7 +231,7 @@
 </script>
 <script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-<!-- <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
+<!--<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="assets/lib/highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="assets/lib/prism/prism.js"></script>
 <script type="text/javascript" src="assets/lib/marked/marked.min.js"></script>
@@ -240,10 +245,18 @@
 <script type="text/javascript" src="assets/lib/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="assets/lib/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
 <script type="text/javascript" src="assets/lib/emojify.js/dist/js/emojify.min.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/dist/echarts.min.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/dark.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/infographic.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/macarons.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/roma.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/shine.js"></script>
+<script type="text/javascript" src="assets/lib/echarts/theme/vintage.js"></script>
+
 
 <script type="text/javascript" src="src/js/backtotop.js"></script>
 <script type="text/javascript" src="src/js/nav.js"></script>
-<script type="text/javascript" src="src/js/index.js"></script> -->
+<script type="text/javascript" src="src/js/index.js"></script>-->
 
 
 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
@@ -260,6 +273,13 @@
 <script src="http://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="dist/lib/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
 <script src="http://cdn.bootcss.com/emojify.js/1.1.0/js/emojify.min.js"></script>
+<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.min.js"></script>
+<script src="dist/js/echarts-theme/dark.min.js"></script>
+<script src="dist/js/echarts-theme/infographic.min.js"></script>
+<script src="dist/js/echarts-theme/macarons.min.js"></script>
+<script src="dist/js/echarts-theme/roma.min.js"></script>
+<script src="dist/js/echarts-theme/shine.min.js"></script>
+<script src="dist/js/echarts-theme/vintage.min.js"></script>
 
 <script src="dist/js/backtotop.min.js"></script>
 <script src="dist/js/nav.min.js"></script>
