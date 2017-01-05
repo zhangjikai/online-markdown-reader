@@ -10,6 +10,8 @@ Markdown 在线阅读器。
   * [Mathjax](#mathjax)
   * [时序图](#时序图)
   * [Emoji](#emoji)
+  * [ECharts](#echarts)
+    * [配置](#配置)
   * [自定义扩展](#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95)
 - [导出](#%E5%AF%BC%E5%87%BA)
   * [多说评论框](#%E5%A4%9A%E8%AF%B4%E8%AF%84%E8%AE%BA%E6%A1%86)
@@ -34,6 +36,7 @@ Markdown 在线阅读器。
     - [MathJax](https://github.com/mathjax/MathJax) 
     - [时序图 (Js sequence diagrams)](https://github.com/bramp/js-sequence-diagrams)
     - [Emoji (Emojify.js)](https://github.com/Ranks/emojify.js)
+    - [ECharts](http://echarts.baidu.com/)
 
 ## 示例
 [示例文件](demo/sample.md)    [示例预览](http://zhangjikai.com/markdown/sample.html)
@@ -73,7 +76,7 @@ $$
 
 
 ### 时序图
-在Markdown 文档中添加下面的代码块，会将代码块中的代码解析为时序图
+在 Markdown 文档中添加下面的代码块，会将代码块中的代码解析为时序图
 
 <pre lang="no-highlight"><code>```seq
 A->B: Normal line
@@ -86,6 +89,62 @@ D-->>A: Dashed open arrow
 ### Emoji
 Emoji表情参见 [EMOJI CHEAT SHEET](http://www.webpagefx.com/tools/emoji-cheat-sheet/)
 
+### ECharts
+在文档中加入下面的代码块，会将代码块中代码解析为 [ECharts](http://echarts.baidu.com/) 图表。只支持默认的数据显示，无法添加自定义的事件处理。
+
+<pre lang="no-highlight"><code>```echarts
+{
+    title: {
+        text: 'ECharts 入门示例'
+    },
+    tooltip: {},
+    legend: {
+        data:['销量']
+    },
+    xAxis: {
+        data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+    },
+    yAxis: {},
+    series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+    }]
+}
+```
+</code></pre>
+
+#### 配置
+目前支持下面的配置选项
+* **`width`**： 图表宽度，可选，默认值是 `100%` 
+* **`height`**: 图表高度，可选，默认值是 `400px`
+* **`theme`**: 图标主题，可选，有效的主题是： `dark`, `infographic`, `macarons`, `roma`, `shine`, `vintage`
+
+其余的参数都是 ECharts 中定义的参数，具体的参考 [ECharts 配置](http://echarts.baidu.com/option.html#title)
+下面是一个示例
+```json
+{
+    width: "600px",
+    height: "400px",
+    theme: "macarons",
+    title: {
+        text: 'ECharts 入门示例'
+    },
+    tooltip: {},
+    legend: {
+        data:['销量']
+    },
+    xAxis: {
+        data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+    },
+    yAxis: {},
+    series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+    }]
+}
+```
 ### 自定义扩展
 在现有程序的基础上，我们可以很方便的添加扩展功能。基本流程大概就是引入扩展的库文件，在渲染 Markdown 文件时 调用库文件相应的方法。以添加时序图为例：  
 
