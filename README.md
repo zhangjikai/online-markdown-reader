@@ -115,14 +115,13 @@ Emoji表情参见 [EMOJI CHEAT SHEET](http://www.webpagefx.com/tools/emoji-cheat
 </code></pre>
 
 #### 配置
-目前支持下面的配置选项
+目前自定义了三个配置项：
 * **`width`**： 图表宽度，可选，默认值是 `100%` 
 * **`height`**: 图表高度，可选，默认值是 `400px`
 * **`theme`**: 图标主题，可选，有效的主题是： `dark`, `infographic`, `macarons`, `roma`, `shine`, `vintage`
 
-其余的参数都是 ECharts 中定义的参数，具体的参考 [ECharts 配置](http://echarts.baidu.com/option.html#title)
-下面是一个示例
-```json
+其余的参数都是 ECharts 中定义的参数，具体的参考 [ECharts 配置](http://echarts.baidu.com/option.html#title)。下面是一个完整示例
+```
 {
     width: "600px",
     height: "400px",
