@@ -116,7 +116,6 @@
 
     };
     renderer.code = function (code, language) {
-
         switch (language) {
             case "seq":
                 if (Setting.sd) {
