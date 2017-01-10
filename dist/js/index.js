@@ -96,9 +96,26 @@
             '' + "</a>" + text + "</h" + level + ">";
     };
 
-    var originalCodeFun = renderer.code;
-    renderer.code = function (code, language) {
+    //var originalCodeFun = renderer.code;
 
+    var originalCodeFun = function (code, lang) {
+
+
+        if (Setting.highlight == Constants.highlight) {
+            return "<pre><code class='" + lang +
+                "'>" + code + "</code></pre>";
+        }
+
+        /*if (Setting.highlight == Constants.syntaxhigh) {
+            return "<pre  class=' brush: " + lang +
+                "; toolbar: false;'>" + code + "</pre>";
+        }*/
+
+        return "<pre><code class='language-" + lang +
+            "'>" + code + "</code></pre>";
+
+    };
+    renderer.code = function (code, language) {
         switch (language) {
             case "seq":
                 if (Setting.sd) {
