@@ -4,6 +4,7 @@ body {
     color: #444444;
     line-height: 1;
     padding: 10px;
+    font-size: 14px;
 }
 
 img {
@@ -26,7 +27,7 @@ h1, h2, h3, h4 {
 }
 
 h1, h2, h3, h4, h5 {
-    font-family: Georgia, Palatino, serif;
+    /*font-family: Georgia, Palatino, serif;*/
 }
 
 h1, h2, h3, h4, h5, dl {
@@ -311,4 +312,24 @@ strong {
 
 #ds-thread {
     margin-top: 2em;
+}
+
+.fancybox-image {
+    display: block;
+    cursor: pointer;
+
+
+}
+
+.fancybox-image img {
+
+    max-height: 100%;
+}
+
+.fancybox-next span {
+    left: auto;
+    right: 20px;
+}
+.fancybox-prev span {
+    left: 20px;
 }

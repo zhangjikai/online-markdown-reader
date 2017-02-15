@@ -55,7 +55,8 @@
         backtop: true,
         duoshuo: true,
         echarts: true,
-        format: true
+        format: true,
+        fancybox: true
     };
 
     var exportSetting = {
@@ -98,6 +99,19 @@
 
     //var originalCodeFun = renderer.code;
 
+    // 处理图片，添加jquery fancybox 支持
+    renderer.image = function (href, title, text) {
+        //console.log(this.options.xhtml);
+        var out = '<div class="fancybox-image" data-fancybox-group="fancybox-gallery" href="' + href + '"><img src="' + href + '" alt="' + text + '"';
+        //var out = '<a class="fancybox-image" rel="fancybox-gallery"><img src="' + href + '" alt="' + text + '"';
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += "/></div>"
+        //out += this.options.xhtml ? '/>' : '>';
+        return out;
+    };
+
     var originalCodeFun = function (code, lang) {
 
 
@@ -107,9 +121,9 @@
         }
 
         /*if (Setting.highlight == Constants.syntaxhigh) {
-            return "<pre  class=' brush: " + lang +
-                "; toolbar: false;'>" + code + "</pre>";
-        }*/
+         return "<pre  class=' brush: " + lang +
+         "; toolbar: false;'>" + code + "</pre>";
+         }*/
 
         return "<pre><code class='language-" + lang +
             "'>" + code + "</code></pre>";
@@ -336,7 +350,11 @@
                     chart.setOption(data.option);
                 });
             }
-        } catch(e) {
+
+            if (Setting.fancybox) {
+                $(".fancybox-image").fancybox();
+            }
+        } catch (e) {
             sweetAlert("出错了", "处理文件出现错误，请检查语法", "error");
         }
 
@@ -467,6 +485,7 @@
             if ($(images[i]).attr("pname") == null) {
                 imgSrc = images[i].src;
                 $(images[i]).attr("pName", imgSrc);
+
             } else {
                 imgSrc = $(images[i]).attr("pname");
             }
@@ -474,6 +493,7 @@
             var imgName = getImgName(imgSrc);
             if (cacheImages.hasOwnProperty(imgName)) {
                 images[i].src = cacheImages[imgName];
+                $(images[i]).parent().attr("href", images[i].src);
             }
         }
         $("#loader").css("display", "none");
@@ -723,6 +743,18 @@
         exportSetting.echarts = false;
 
         processMdContent(mdContent);
+        var jquery = Setting.fancybox || Setting.backtop;
+        if (jquery) {
+            jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
+        }
+        if (Setting.fancybox) {
+            styleContent += '<link href="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">';
+            jsContent += '<script src="http://cdn.bootcss.com/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>';
+            jsContent += '<script src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>';
+            jsContent += '<script> $(".fancybox-image").fancybox();</script>'
+
+        }
+
 
         if (Setting.mathjax) {
             jsContent += '<script type="text/x-mathjax-config">' +
@@ -738,7 +770,7 @@
         if (Setting.backtop) {
             styleContent += '<link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">';
             styleContent += ' <link rel="stylesheet" href="http://markdown.zhangjikai.com/dist/css/backtotop.min.css">';
-            jsContent += '<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>';
+
             jsContent += '<script type="text/javascript" src="http://markdown.zhangjikai.com/dist/js/backtotop.min.js"></script>';
             jsContent += '<script type="text/javascript">backToTop.init()</script> '
         }
