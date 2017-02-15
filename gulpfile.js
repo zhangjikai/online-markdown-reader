@@ -32,7 +32,11 @@ gulp.task("move", function () {
             './bower_components/magic-check/**/*magic-check*css',
             './bower_components/echarts/dist/**/*js',
             './bower_components/echarts/theme/**/*js',
-            './bower_components/sweetalert/dist/**/*'
+            './bower_components/sweetalert/dist/**/*',
+            './bower_components/fancybox/source/**/*',
+            './bower_components/fancybox/lib/**/*',
+
+
 
 
         ],

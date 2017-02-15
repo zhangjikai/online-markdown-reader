@@ -37,6 +37,7 @@ Markdown 在线阅读器。
     - [时序图 (Js sequence diagrams)](https://github.com/bramp/js-sequence-diagrams)
     - [Emoji (Emojify.js)](https://github.com/Ranks/emojify.js)
     - [ECharts](http://echarts.baidu.com/)
+    - [Fancybox](http://fancybox.net/)
 
 ## 示例
 [示例文件](demo/sample.md)    [示例预览](http://zhangjikai.com/markdown/sample.html)

@@ -27,6 +27,7 @@
     "remodal": "^1.1.0",
     "js-sequence-diagrams": "bramp/js-sequence-diagrams#^2.0.1",
     "echarts": "^3.3.2",
-    "sweetalert": "^1.1.3"
+    "sweetalert": "^1.1.3",
+    "fancybox": "^2.1.6"
   }
 }
