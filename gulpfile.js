@@ -34,11 +34,7 @@ gulp.task("move", function () {
             './bower_components/echarts/theme/**/*js',
             './bower_components/sweetalert/dist/**/*',
             './bower_components/fancybox/source/**/*',
-            './bower_components/fancybox/lib/**/*',
-
-
-
-
+            './bower_components/fancybox/lib/**/*'
         ],
         {
             base: './bower_components'

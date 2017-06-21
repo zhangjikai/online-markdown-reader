@@ -152,7 +152,8 @@
                 }
                 return originalCodeFun.call(this, code, language);
             default :
-                return originalCodeFun.call(this, code, language);
+                var src = code.replace(/</g, "&lt").replace(/>/g, "&gt");
+                return originalCodeFun.call(this, src, language);
         }
     };
 
